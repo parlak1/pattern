@@ -1,6 +1,6 @@
 package pattern.pubsub;
 
-public interface Producible<Product> {
+public interface Producible<T> {
 
 	public void addObserver(Consumer consumer);
 
