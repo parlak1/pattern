@@ -1,4 +1,6 @@
-package pattern.perfectpita;
+package pattern.perfectpita.work;
+
+import pattern.perfectpita.ingredient.Ingredient;
 
 import java.util.List;
 
@@ -10,4 +12,6 @@ public interface Work {
     void addWork(Work work);
     List<Ingredient> getIngredients();
     void prepare();
+
+    String listIngredients();
 }

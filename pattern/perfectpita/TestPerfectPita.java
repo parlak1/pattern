@@ -1,27 +1,32 @@
 package pattern.perfectpita;
 
+import pattern.perfectpita.ingredient.*;
+import pattern.perfectpita.measure.Measure;
+import pattern.perfectpita.measure.Unit;
+import pattern.perfectpita.work.*;
+
 public class TestPerfectPita {
     public static void main(String[] args) {
-        Measure ounze5 = new Measure(5, "ounze");
-        Measure pound10 = new Measure(10, "lb");
-        Measure gallon10 = new Measure(10, "gallon");
+        Measure ounce5 = new Measure(5, Unit.OUNCE);
+        Measure pound10 = new Measure(10, Unit.POUND);
+        Measure gallon10 = new Measure(10, Unit.GALLON);
 
-        Ingredient chickpeas = new Chickpeas(pound10, "123-456-7890");
+        Ingredient chickpea = new Chickpea(pound10, "123-456-7890-chickpea");
         Ingredient water = new Water(gallon10, null);
 
-        Ingredient salt = new Salt(ounze5, "dkdldld-dldldk");
-        Ingredient redPepper = new RedPepper(ounze5, "dkdldld-dldldk");
+        Ingredient salt = new Salt(ounce5, "123-456-7890-salt");
+        Ingredient redPepper = new RedPepper(ounce5, "123-456-7890-redPepper");
 
-        Ingredient cup = new Cup(ounze5, "dkdldld-dldldk");
-        Ingredient lid = new Lid(ounze5, "dkdldld-dldldk");
-        Ingredient box = new Box(ounze5, "dkdldld-dldldk");
+        Ingredient cup = new Cup(ounce5, "123-456-7890-cup");
+        Ingredient lid = new Lid(ounce5, "123-456-7890-lid");
+        Ingredient box = new Box(ounce5, "123-456-7890-box");
 
-        Ingredient tahini = new Tahini(ounze5, "dkdldld-dldldk");
-        Ingredient roastedGarlic = new RoastedGarlic(ounze5, "dkdldld-dldldk");
-        
+        Ingredient tahini = new Tahini(ounce5, "123-456-7890-tahini");
+        Ingredient roastedGarlic = new RoastedGarlic(ounce5, "123-456-7890-roastedGarlic");
+
 
         Work humusMainWork = new HumusMainWork();
-        humusMainWork.addIngredient(chickpeas);
+        humusMainWork.addIngredient(chickpea);
         humusMainWork.addIngredient(water);
 
         Work humusCondimentWork = new HumusCondimentWork();
@@ -33,18 +38,17 @@ public class TestPerfectPita {
         humusPackagingtWork.addIngredient(lid);
         humusPackagingtWork.addIngredient(box);
 
-        Work humusMainFinalFWork = new HumusMainFinalWork();
-        humusMainFinalFWork.addWork(humusMainWork);
-        humusMainFinalFWork.addWork(humusCondimentWork);
-        humusMainFinalFWork.addIngredient(chickpeas);
-        humusMainFinalFWork.addIngredient(tahini);
-        humusMainFinalFWork.addIngredient(roastedGarlic);
-
+        Work humusMainFinalWork = new HumusMainFinalWork();
+        humusMainFinalWork.addWork(humusMainWork);
+        humusMainFinalWork.addWork(humusCondimentWork);
+        humusMainFinalWork.addIngredient(chickpea);
+        humusMainFinalWork.addIngredient(tahini);
+        humusMainFinalWork.addIngredient(roastedGarlic);
 
         Work humusFinalProduct = new HumusMainFinalWork();
-        humusFinalProduct.addWork(humusMainFinalFWork);
+        humusFinalProduct.addWork(humusMainFinalWork);
         humusFinalProduct.addWork(humusPackagingtWork);
 
-        System.out.println("ahmet: " + humusFinalProduct.getIngredients());
+        System.out.println("ahmet: " + humusFinalProduct.listIngredients());
     }
 }

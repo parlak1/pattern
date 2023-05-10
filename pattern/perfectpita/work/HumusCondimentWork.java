@@ -1,10 +1,17 @@
-package pattern.perfectpita;
+package pattern.perfectpita.work;
+
+import lombok.Getter;
+import pattern.perfectpita.ingredient.Ingredient;
+import pattern.perfectpita.measure.Measure;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HumusCondimentWork implements Work {
-    List<Ingredient> ingredients = new ArrayList<>();
+    @Getter
+    private final List<Ingredient> ingredients = new ArrayList<>();
+    @Getter
+    private final List<Work> works = new ArrayList<>();
 
     @Override
     public String getName() {
@@ -13,7 +20,7 @@ public class HumusCondimentWork implements Work {
 
     @Override
     public int getMeasure() {
-        return ingredients.stream().map(x -> x.getMeasure()).mapToInt(o -> o.getWeight()).sum();
+        return ingredients.stream().map(Ingredient::measure).mapToInt(Measure::amount).sum();
     }
 
     @Override
@@ -27,19 +34,17 @@ public class HumusCondimentWork implements Work {
     }
 
     @Override
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    @Override
     public void addWork(Work work) {
-        // todo: do nothing
+        this.works.add(work);
     }
 
     @Override
     public void prepare() {
         // TODO Auto-generated method stub
     }
-
+    @Override
+    public String listIngredients() {
+        return null;
+    }
 
 }
