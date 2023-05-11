@@ -5,6 +5,8 @@ import pattern.perfectpita.measure.Measure;
 import pattern.perfectpita.measure.Unit;
 import pattern.perfectpita.work.*;
 
+import java.time.Instant;
+
 public class TestPerfectPita {
     public static void main(String[] args) {
         Measure ounce5 = new Measure(5, Unit.OUNCE);
@@ -49,6 +51,6 @@ public class TestPerfectPita {
         humusFinalProduct.addWork(humusMainFinalWork);
         humusFinalProduct.addWork(humusPackagingtWork);
 
-        System.out.println("ahmet: " + humusFinalProduct.listIngredients());
+        System.out.println("ingredients: " + humusFinalProduct.listIngredients());
     }
 }

@@ -7,6 +7,7 @@ public record RedPepper(Measure measure, String lot) implements Ingredient {
     public String getName() {
         return "Red Pepper";
     }
+
     @Override
     public String toString() {
         return measure + " red pepper with lot -> " + lot;

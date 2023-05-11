@@ -7,6 +7,7 @@ public record Lid(Measure measure, String lot) implements Ingredient {
     public String getName() {
         return "Lid";
     }
+
     @Override
     public String toString() {
         return measure + " lid with lot -> " + lot;

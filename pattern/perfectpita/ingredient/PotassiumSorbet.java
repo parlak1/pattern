@@ -7,6 +7,7 @@ public record PotassiumSorbet(Measure measure, String lot) implements Ingredient
     public String getName() {
         return "PotassiumSorbet";
     }
+
     @Override
     public String toString() {
         return measure + " potassium sorbet with lot -> " + lot;

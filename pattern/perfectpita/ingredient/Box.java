@@ -7,6 +7,7 @@ public record Box(Measure measure, String lot) implements Ingredient {
     public String getName() {
         return "Box";
     }
+
     @Override
     public String toString() {
         return measure + " box with lot -> " + lot;

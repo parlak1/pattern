@@ -7,6 +7,7 @@ public record Water(Measure measure, String lot) implements Ingredient {
     public String getName() {
         return "Water";
     }
+
     @Override
     public String toString() {
         return measure + " water with lot -> " + lot;

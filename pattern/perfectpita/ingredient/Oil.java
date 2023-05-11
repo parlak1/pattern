@@ -7,6 +7,7 @@ public record Oil(Measure measure, String lot) implements Ingredient {
     public String getName() {
         return "Oil";
     }
+
     @Override
     public String toString() {
         return measure + " oil with lot -> " + lot;

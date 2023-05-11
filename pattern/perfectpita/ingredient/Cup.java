@@ -7,6 +7,7 @@ public record Cup(Measure measure, String lot) implements Ingredient {
     public String getName() {
         return "Cup";
     }
+
     @Override
     public String toString() {
         return measure + " cup with lot -> " + lot;

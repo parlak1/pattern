@@ -2,30 +2,31 @@ package pattern.perfectpita.work;
 
 import lombok.Getter;
 import pattern.perfectpita.ingredient.Ingredient;
-import pattern.perfectpita.measure.Measure;
+import pattern.perfectpita.util.Constant;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HumusCondimentWork implements Work {
     @Getter
-    private final List<Ingredient> ingredients = new ArrayList<>();
+    private final List<Ingredient> ingredients;
     @Getter
-    private final List<Work> works = new ArrayList<>();
+    private final List<Work> works;
 
-    @Override
-    public String getName() {
-        return "Humus condiment batch work in progress";
+    public HumusCondimentWork() {
+        ingredients = new ArrayList<>();
+        works = new ArrayList<>();
     }
 
     @Override
-    public int getMeasure() {
-        return ingredients.stream().map(Ingredient::measure).mapToInt(Measure::amount).sum();
+    public String getName() {
+        return this.getClass().getSimpleName();
     }
 
     @Override
     public String getLot() {
-        return "hello this is Humus condiment batch work in progress lot number, change me!!";
+        return Constant.DATE_FORMAT.format(Instant.now()) + '_' +this.getClass().getSimpleName();
     }
 
     @Override
@@ -40,11 +41,12 @@ public class HumusCondimentWork implements Work {
 
     @Override
     public void prepare() {
-        // TODO Auto-generated method stub
+        System.out.println(this.getClass().getSimpleName() + " prepare method is invoked.");
     }
+
     @Override
     public String listIngredients() {
-        return null;
+        return this.works.stream().map(Work::getIngredients).toList().toString();
     }
 
 }

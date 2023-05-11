@@ -25,6 +25,6 @@ public enum Unit {
 
     enum Kind {
         IMPERIAL,
-        METRIC;
+        METRIC
     }
 }

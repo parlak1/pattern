@@ -7,6 +7,7 @@ public record Salt(Measure measure, String lot) implements Ingredient {
     public String getName() {
         return "Salt";
     }
+
     @Override
     public String toString() {
         return measure + " salt with lot -> " + lot;
