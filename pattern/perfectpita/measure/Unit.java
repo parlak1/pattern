@@ -5,11 +5,15 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum Unit {
+    /* base units */
     GRAM("g", Kind.METRIC, 1, null),
-    KILOGRAM("kg", Kind.METRIC, 1000, GRAM),
     MILLILITRE("ml", Kind.METRIC, 1, null),
+
+    /* derived units */
+    KILOGRAM("kg", Kind.METRIC, 1000, GRAM),
     LITRE("l", Kind.METRIC, 1000, MILLILITRE),
 
+    /* imperial units */
     POUND("lb", Kind.IMPERIAL, 453.592, GRAM),
     GALLON("gal", Kind.IMPERIAL, 3785.41, MILLILITRE),
     OUNCE("oz", Kind.IMPERIAL, 29.5735, GRAM);

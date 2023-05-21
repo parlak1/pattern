@@ -5,26 +5,25 @@ import pattern.perfectpita.measure.Measure;
 import pattern.perfectpita.measure.Unit;
 import pattern.perfectpita.work.*;
 
-import java.time.Instant;
-
 public class TestPerfectPita {
     public static void main(String[] args) {
         Measure ounce5 = new Measure(5, Unit.OUNCE);
         Measure pound10 = new Measure(10, Unit.POUND);
         Measure gallon10 = new Measure(10, Unit.GALLON);
 
-        Ingredient chickpea = new Chickpea(pound10, "123-456-7890-chickpea");
-        Ingredient water = new Water(gallon10, null);
+        Ingredient chickpea = new IngredientImpl("Chickpea", pound10, "123-456-7890-chickpea");
+        Ingredient water = new IngredientImpl("Water", gallon10, null);
 
-        Ingredient salt = new Salt(ounce5, "123-456-7890-salt");
-        Ingredient redPepper = new RedPepper(ounce5, "123-456-7890-redPepper");
+        Ingredient salt = new IngredientImpl("Salt", ounce5, "123-456-7890-salt");
+        Ingredient redPepper = new IngredientImpl("RedPepper", ounce5, "123-456-7890-redPepper");
 
-        Ingredient cup = new Cup(ounce5, "123-456-7890-cup");
-        Ingredient lid = new Lid(ounce5, "123-456-7890-lid");
-        Ingredient box = new Box(ounce5, "123-456-7890-box");
+        Ingredient cup = new IngredientImpl("Cup", ounce5, "123-456-7890-cup");
+        Ingredient lid = new IngredientImpl("Lid", ounce5, "123-456-7890-lid");
+        Ingredient box = new IngredientImpl("Box", ounce5, "123-456-7890-box");
 
-        Ingredient tahini = new Tahini(ounce5, "123-456-7890-tahini");
-        Ingredient roastedGarlic = new RoastedGarlic(ounce5, "123-456-7890-roastedGarlic");
+        Ingredient tahini = new IngredientImpl("Tahini", ounce5, "123-456-7890-tahini");
+
+        Ingredient roastedGarlic = new IngredientImpl("RoastedGarlic", ounce5, "123-456-7890-roastedGarlic");
 
 
         Work humusMainWork = new HumusMainWork();
@@ -52,5 +51,6 @@ public class TestPerfectPita {
         humusFinalProduct.addWork(humusPackagingtWork);
 
         System.out.println("ingredients: " + humusFinalProduct.listIngredients());
+        humusFinalProduct.prepare();
     }
 }

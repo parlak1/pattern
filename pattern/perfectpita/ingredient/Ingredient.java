@@ -5,7 +5,7 @@ import pattern.perfectpita.measure.Measure;
 public interface Ingredient {
     String getName();
 
-    Measure measure();
+    Measure getAmount();
 
     String lot();
 }
