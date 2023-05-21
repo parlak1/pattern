@@ -15,6 +15,8 @@ public interface Work {
 
     List<Ingredient> getIngredients();
 
+    List<Work> getWorks();
+
     void prepare();
 
     String listIngredients();

@@ -8,29 +8,23 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HumusMainWork implements Work {
+public class WorkImpl implements Work {
+    @Getter
+    private final String name;
     @Getter
     private final List<Ingredient> ingredients;
     @Getter
     private final List<Work> works;
 
-    public HumusMainWork() {
-        ingredients = new ArrayList<>();
-        works = new ArrayList<>();
+    public WorkImpl(String name) {
+        this.name = name;
+        this.ingredients = new ArrayList<>();
+        this.works = new ArrayList<>();
     }
-
-    @Override
-    public String getName() {
-        return this.getClass().getSimpleName();
-    }
-
-//    public int getMeasure() {
-//        return ingredients.stream().map(Ingredient::measure).mapToInt(Measure::amount).sum();
-//    }
 
     @Override
     public String getLot() {
-        return Constant.DATE_FORMAT.format(Instant.now()) + '_' +this.getClass().getSimpleName();
+        return Constant.DATE_FORMAT.format(Instant.now()) + '_' + this.getClass().getSimpleName();
     }
 
     @Override
@@ -40,16 +34,20 @@ public class HumusMainWork implements Work {
 
     @Override
     public void addWork(Work work) {
-        this.works.add(work);
+        works.add(work);
     }
 
     @Override
     public void prepare() {
-        System.out.println(this.getClass().getSimpleName() + " prepare method is invoked.");
+        System.out.println("Yay! I'm preparing the " + name);
     }
 
     @Override
     public String listIngredients() {
         return this.works.stream().map(Work::getIngredients).toList().toString();
     }
+
+//    public int getMeasure() {
+//        return ingredients.stream().map(Ingredient::measure).mapToInt(Measure::amount).sum();
+//    }
 }
