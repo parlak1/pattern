@@ -7,5 +7,5 @@ public interface Ingredient {
 
     Measure getAmount();
 
-    String lot();
+    String getLot();
 }

@@ -14,6 +14,11 @@ public record IngredientImpl(String name, Measure measure, String lot) implement
     }
 
     @Override
+    public String getLot() {
+        return lot;
+    }
+
+    @Override
     public String toString() {
         return measure + " " + name + " with lot -> " + lot;
     }

@@ -4,8 +4,8 @@ import lombok.Getter;
 import pattern.perfectpita.ingredient.Ingredient;
 import pattern.perfectpita.util.Constant;
 
-import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class WorkImpl implements Work {
@@ -15,6 +15,8 @@ public class WorkImpl implements Work {
     private final List<Ingredient> ingredients;
     @Getter
     private final List<Work> works;
+    @Getter
+    private String lot;
 
     public WorkImpl(String name) {
         this.name = name;
@@ -23,8 +25,8 @@ public class WorkImpl implements Work {
     }
 
     @Override
-    public String getLot() {
-        return Constant.DATE_FORMAT.format(Instant.now()) + '_' + this.getClass().getSimpleName();
+    public void assignLot() {
+        lot = Constant.DATE_FORMAT.format(new Date()) + '_' + this.getClass().getSimpleName();
     }
 
     @Override
@@ -40,6 +42,7 @@ public class WorkImpl implements Work {
     @Override
     public void prepare() {
         System.out.println("Yay! I'm preparing the " + name);
+        assignLot();
     }
 
     @Override

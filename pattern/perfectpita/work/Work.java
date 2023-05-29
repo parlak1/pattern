@@ -9,6 +9,8 @@ public interface Work {
 
     String getLot();
 
+    void assignLot();
+
     void addIngredient(Ingredient ingredient);
 
     void addWork(Work work);

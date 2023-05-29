@@ -31,11 +31,13 @@ public class TestPerfectPita {
         Work humusMainWork = new WorkImpl("humusMainWork");
         humusMainWork.addIngredient(chickpea);
         humusMainWork.addIngredient(water);
+        humusMainWork.prepare();
 
         // setup humus condiment work
         Work humusCondimentWork = new WorkImpl("humusCondimentWork");
         humusCondimentWork.addIngredient(salt);
         humusCondimentWork.addIngredient(redPepper);
+        humusCondimentWork.prepare();
 
         // setup: humus packaging work
         Work humusPackagingWork = new WorkImpl("humusPackagingWork");
@@ -47,9 +49,9 @@ public class TestPerfectPita {
         Work humusMainFinalWork = new WorkImpl("humusMainFinalWork");
         humusMainFinalWork.addWork(humusMainWork);
         humusMainFinalWork.addWork(humusCondimentWork);
-        humusMainFinalWork.addIngredient(chickpea);
         humusMainFinalWork.addIngredient(tahini);
         humusMainFinalWork.addIngredient(roastedGarlic);
+        humusMainFinalWork.prepare();
 
         // setup humus final product
         Work humusFinalProduct = new WorkImpl("humusFinalProduct");
@@ -57,6 +59,7 @@ public class TestPerfectPita {
         humusFinalProduct.addWork(humusPackagingWork);
 
         humusFinalProduct.prepare();
+
         System.out.println("Wanna see the ingredients? Here they are: " + humusFinalProduct.listIngredients());
     }
 
