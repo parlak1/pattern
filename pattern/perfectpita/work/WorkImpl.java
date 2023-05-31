@@ -47,6 +47,7 @@ public class WorkImpl implements Work {
 
     @Override
     public String listIngredients() {
+        // TODO "print all ingredients with their respective lots"
         return this.works.stream().map(Work::getIngredients).toList().toString();
     }
 
