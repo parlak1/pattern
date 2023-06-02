@@ -1,4 +1,4 @@
-    type ObjeTipim = {
+    export type ObjeTipim = {
         ilk: number,
         ikinci: number
     }
