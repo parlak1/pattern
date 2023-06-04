@@ -1,11 +1,9 @@
-export type Ingredient = {
+export type Measure = {
     name: string | undefined
-    lot: string | undefined
-    measure: number | null
-    children?: React.JSX.Element | React.JSX.Element[]
+    code: string | undefined
 }
 
-export const measures = [
+export const Measures = [
     { name: 'Pound', code: 'lb' },
     { name: 'Ounce', code: 'oz' },
     { name: 'Gallon', code: 'gal' },
@@ -13,5 +11,18 @@ export const measures = [
     { name: 'Liter', code: 'l' }
 ]
 
-/*Object.keys(obj).forEach((prop)=> console.log(prop));*/
+export type Ingredient = {
+    name: string | undefined
+    lot: string | undefined
+    measure: {amount: number, unit: Measure} | undefined
+    children?: React.JSX.Element | React.JSX.Element[]
+}
+
+export type StringMap = {
+    [key: string]: string
+}
+
+
+
+
 

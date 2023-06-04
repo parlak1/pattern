@@ -41,3 +41,13 @@
         // ilkim = 'apple'
         // ikincim = 'orange'
     }
+
+    const spreadOperatorFunc = () => {
+        let myArray = ['elma', 'armut'] // [elma, armut]
+        let myNewArray = [...myArray, 'portakal'] // [elma, armut, portakal]
+        myArray = [...myArray, 'karpuz'] // [elma, armut, karpuz]
+    }
+
+    /*Object.keys(obj).forEach((prop)=> console.log(prop));*/
+
+    
