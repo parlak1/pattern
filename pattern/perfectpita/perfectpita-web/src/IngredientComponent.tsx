@@ -4,7 +4,8 @@ import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
 import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
-import { Ingredient, Measures } from './types'
+import { Ingredient, Measure, Unit } from './types'
+import { measures } from "./db"
 
 export const IngredientComponent: FC<{
     ingredients: Ingredient[],
@@ -16,18 +17,18 @@ export const IngredientComponent: FC<{
 
         const [ingredientName, setIngredientName] = useState<string>()
         const [ingredientLot, setIngredientLot] = useState<string>()
-        const [ingredientMeasure, setIngredientMeasure] = useState<number>()
-        const [selectedMeasure, setSelectedMeasure] = useState({ name: '', code: '', amount: 0 })
+        const [ingredientAmount, setIngredientAmount] = useState<number>()
+        const [selectedUnit, setSelectedUnit] = useState<Unit>()
         const [showWorkOutputGroup, setShowWorkOutputGroup] = useState<boolean>(false)
         const [showCreateIngredientGroup, setShowCreateIngredientGroup] = useState<boolean>(false)
 
         const onClickPrepareIngredient = () => {
             setShowWorkOutputGroup(true)
             // create ingredient
-            setIngredients([...ingredients, { name: ingredientName, lot: ingredientLot, measure: {ingredientMeasure, selectedMeasure} }])
+            setIngredients([...ingredients, { name: ingredientName, lot: ingredientLot, amount: {mass: ingredientAmount, unit: selectedUnit} }])
             setIngredientName('')
             setIngredientLot('')
-            setIngredientMeasure(0)
+            setIngredientAmount(0)
         }
 
         const onClickCreateIngredient = () => {
@@ -63,15 +64,15 @@ export const IngredientComponent: FC<{
                                 <span className="p-float-label">
                                     <InputNumber
                                         id="inputMeasure"
-                                        value={ingredientMeasure}
-                                        onChange={e => setIngredientMeasure(e.value ?? 0)}
+                                        value={ingredientAmount}
+                                        onChange={e => setIngredientAmount(e.value ?? 0)}
                                     />
                                     <label htmlFor="inputMeasure">Ingredient amount</label>
                                     <div className="card flex justify-content-center">
                                         <Dropdown
-                                            value={selectedMeasure}
-                                            onChange={e => setSelectedMeasure(e.value)}
-                                            options={Measures}
+                                            value={selectedUnit}
+                                            onChange={e => setSelectedUnit(e.value)}
+                                            options={measures}
                                             optionLabel="name"
                                             placeholder="Select a Measurement"
                                             className="w-full md:w-14rem"

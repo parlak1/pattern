@@ -1,20 +1,17 @@
-export type Measure = {
+export type Unit = {
     name: string | undefined
     code: string | undefined
 }
 
-export const Measures = [
-    { name: 'Pound', code: 'lb' },
-    { name: 'Ounce', code: 'oz' },
-    { name: 'Gallon', code: 'gal' },
-    { name: 'Gram', code: 'g' },
-    { name: 'Liter', code: 'l' }
-]
+export type Measure = {
+    mass: number | undefined
+    unit: Unit | undefined
+}
 
 export type Ingredient = {
     name: string | undefined
     lot: string | undefined
-    measure: {amount: number, unit: Measure} | undefined
+    amount: Measure | undefined
     children?: React.JSX.Element | React.JSX.Element[]
 }
 

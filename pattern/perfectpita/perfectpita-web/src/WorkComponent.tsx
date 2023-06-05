@@ -2,7 +2,7 @@ import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
 import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
-import { Ingredient, Measures } from "./types"
+import { Ingredient } from "./types"
 import { FC, useState } from "react"
 import { Fieldset } from 'primereact/fieldset';
 import { DataTable } from 'primereact/datatable';
@@ -15,7 +15,7 @@ export const WorkComponent: FC<{
 }) => {
 
         const [workName, setWorkName] = useState<string>()
-        const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>({name: undefined, lot: undefined, measure: undefined})
+        const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>({ name: undefined, lot: undefined, amount: undefined })
         const [showCreateWorkGroup, setShowCreateWorkGroup] = useState<boolean>(false)
         const [workIngredients, setWorkIngredients] = useState<Ingredient[]>([])
         const [workLot, setWorkLot] = useState<string>('')
@@ -36,6 +36,10 @@ export const WorkComponent: FC<{
 
         const onClickAddIngredient = () => {
             setWorkIngredients([...workIngredients, selectedIngredient])
+        }
+
+        const measureBodyTemplate = (ingredient: Ingredient): string => {
+            return ingredient.amount?.mass + ' ' + ingredient.amount?.unit?.code
         }
 
         return (
@@ -96,12 +100,12 @@ export const WorkComponent: FC<{
                         Work lot: {workLot}
                     </p>
                     <DataTable value={workIngredients} tableStyle={{ minWidth: '50rem' }}>
-                        <Column field="lot" header="Lot"></Column>
                         <Column field="name" header="Ingredient name"></Column>
-                        <Column field="measure" header="Amount"></Column>
+                        <Column field="lot" header="Lot"></Column>
+                        <Column field="measure" header="Amount" body={measureBodyTemplate}></Column>
                     </DataTable>
                 </Fieldset>
-                
+
             </div>
         )
     }
