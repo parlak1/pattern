@@ -8,9 +8,9 @@ import 'primereact/resources/primereact.min.css'
 import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 
-import { WorkComponent } from './WorkComponent'
-import { IngredientComponent } from './IngredientComponent'
-import { Ingredient} from './types'
+import { WorkComponent } from './components/WorkComponent'
+import { IngredientComponent } from './components/IngredientComponent'
+import { Ingredient} from './models/types'
 
 const App = () => {
 

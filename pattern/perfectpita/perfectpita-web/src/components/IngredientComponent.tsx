@@ -4,8 +4,8 @@ import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
 import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
-import { Ingredient, Measure, Unit } from './types'
-import { measures } from "./db"
+import { Ingredient, Measure, Unit } from '../models/types'
+import { measures } from "../common/db"
 
 export const IngredientComponent: FC<{
     ingredients: Ingredient[],

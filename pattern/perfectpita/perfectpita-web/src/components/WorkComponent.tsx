@@ -2,7 +2,7 @@ import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
 import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
-import { Ingredient } from "./types"
+import { Ingredient } from "../models/types"
 import { FC, useState } from "react"
 import { Fieldset } from 'primereact/fieldset';
 import { DataTable } from 'primereact/datatable';
