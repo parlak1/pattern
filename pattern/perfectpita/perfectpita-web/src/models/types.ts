@@ -12,7 +12,6 @@ export type Ingredient = {
     name: string | undefined
     lot: string | undefined
     amount: Measure | undefined
-    children?: React.JSX.Element | React.JSX.Element[]
 }
 
 export type StringMap = {

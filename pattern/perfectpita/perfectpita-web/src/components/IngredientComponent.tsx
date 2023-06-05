@@ -17,7 +17,7 @@ export const IngredientComponent: FC<{
 
         const [ingredientName, setIngredientName] = useState<string>()
         const [ingredientLot, setIngredientLot] = useState<string>()
-        const [ingredientAmount, setIngredientAmount] = useState<number>()
+        const [ingredientAmount, setIngredientAmount] = useState<number|undefined>()
         const [selectedUnit, setSelectedUnit] = useState<Unit>()
         const [showWorkOutputGroup, setShowWorkOutputGroup] = useState<boolean>(false)
         const [showCreateIngredientGroup, setShowCreateIngredientGroup] = useState<boolean>(false)
@@ -28,7 +28,7 @@ export const IngredientComponent: FC<{
             setIngredients([...ingredients, { name: ingredientName, lot: ingredientLot, amount: {mass: ingredientAmount, unit: selectedUnit} }])
             setIngredientName('')
             setIngredientLot('')
-            setIngredientAmount(0)
+            setIngredientAmount(undefined)
         }
 
         const onClickCreateIngredient = () => {
