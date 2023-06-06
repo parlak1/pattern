@@ -30,30 +30,29 @@ export const IngredientComponent: FC<{
 
         const [ingredientName, setIngredientName] = useState<string>()
         const [ingredientLot, setIngredientLot] = useState<string>()
-        const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>({ name: undefined, lot: undefined })
+        const [selectedIngredient, setSelectedIngredient] = useState<any>({ name: undefined, lot: undefined })
         const [products, setProducts] = useState(null)
         const [product, setProduct] = useState(emptyProduct)
         const [submitted, setSubmitted] = useState(false)
         const [productDialog, setProductDialog] = useState(false)
         const [deleteProductsDialog, setDeleteProductsDialog] = useState(false)
-        const [selectedProducts, setSelectedProducts] = useState(null)
-        const dt = useRef(null)
-        const [globalFilter, setGlobalFilter] = useState(null)
-
+        const [selectedProducts, setSelectedProducts] = useState<any>(null)
+        const dt = useRef<any>(null)
+        const [globalFilter, setGlobalFilter] = useState<any>()
         const [visibleDialog, setVisibleDialog] = useState<boolean>(false)
-        const footerContent = (
-            <div>
-                <Button label="Cancel" icon="pi pi-times" onClick={() => setVisibleDialog(false)} className="p-button-text" />
-                <Button label="Add Ingredient" icon="pi pi-check" onClick={() => onClickPrepareIngredient()} autoFocus />
-            </div>
-        )
         const header = (
             <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
                 <h4 className="m-0">Manage Products</h4>
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
-                    <InputText type="search" onInput={e => setGlobalFilter(e.target.value)} placeholder="Search..." />
+                    <InputText type="search" onInput={e => setGlobalFilter((e.target as HTMLInputElement).value)} placeholder="Search..." />
                 </span>
+            </div>
+        )
+        const footerContent = (
+            <div>
+                <Button label="Cancel" icon="pi pi-times" onClick={() => setVisibleDialog(false)} className="p-button-text" />
+                <Button label="Add Ingredient" icon="pi pi-check" onClick={() => onClickPrepareIngredient()} autoFocus />
             </div>
         )
 
@@ -61,20 +60,20 @@ export const IngredientComponent: FC<{
             setIngredients([...ingredients, { name: ingredientName, lot: ingredientLot }])
             setIngredientName('')
             setIngredientLot('')
-            setVisibleDialog(false)
+            setVisibleDialog(true)
         }
 
         const leftToolbarTemplate = () => {
             return (
                 <div className="flex flex-wrap gap-2">
                     <Button
-                        label="New"
+                        label="New Ingredient"
                         icon="pi pi-plus"
                         severity="success"
                         onClick={openNew}
                     />
                     <Button
-                        label="Delete"
+                        label="Delete Ingredient"
                         icon="pi pi-trash"
                         severity="danger"
                         onClick={confirmDeleteSelected}
@@ -92,6 +91,7 @@ export const IngredientComponent: FC<{
             setProduct(emptyProduct)
             setSubmitted(false)
             setProductDialog(true)
+            setVisibleDialog(true)
         }
 
         const rightToolbarTemplate = () => {
@@ -104,12 +104,18 @@ export const IngredientComponent: FC<{
 
         return (
             <div>
-                <Button
+                {/* <Button
                     label="Create Ingredient"
                     icon="pi pi-external-link"
                     onClick={() => setVisibleDialog(true)}
-                />
-                <Dialog header="New Ingredient" visible={visibleDialog} style={{ width: '50vw' }} onHide={() => setVisibleDialog(false)} footer={footerContent}>
+                /> */}
+                <Dialog 
+                    header="Create New Ingredient" 
+                    visible={visibleDialog} 
+                    style={{ width: '50vw' }} 
+                    onHide={() => setVisibleDialog(false)} 
+                    footer={footerContent}
+                >
                     <div className="card">
                         <div className="p-fluid p-grid">
                             <div className="p-field p-col-12 p-md-4" style={{ marginTop: 30 }}>
