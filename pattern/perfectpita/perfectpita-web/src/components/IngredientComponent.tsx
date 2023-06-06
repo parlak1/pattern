@@ -1,11 +1,12 @@
-import React, { FC, useState } from "react"
+import { FC, useRef, useState } from "react"
 
 import { Button } from "primereact/button"
-import { Dropdown } from "primereact/dropdown"
-import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
-import { Ingredient, Measure, Unit } from '../models/types'
-import { measures } from "../common/db"
+import { Ingredient } from '../models/types'
+import { Dialog } from 'primereact/dialog'
+import { Column } from "primereact/column"
+import { DataTable } from "primereact/datatable"
+import { Toolbar } from 'primereact/toolbar'
 
 export const IngredientComponent: FC<{
     ingredients: Ingredient[],
@@ -15,37 +16,100 @@ export const IngredientComponent: FC<{
     setIngredients
 }) => {
 
-        const [ingredientName, setIngredientName] = useState<string>()
-        const [ingredientLot, setIngredientLot] = useState<string>()
-        const [ingredientAmount, setIngredientAmount] = useState<number|undefined>()
-        const [selectedUnit, setSelectedUnit] = useState<Unit>()
-        const [showWorkOutputGroup, setShowWorkOutputGroup] = useState<boolean>(false)
-        const [showCreateIngredientGroup, setShowCreateIngredientGroup] = useState<boolean>(false)
-
-        const onClickPrepareIngredient = () => {
-            setShowWorkOutputGroup(true)
-            // create ingredient
-            setIngredients([...ingredients, { name: ingredientName, lot: ingredientLot, amount: {mass: ingredientAmount, unit: selectedUnit} }])
-            setIngredientName('')
-            setIngredientLot('')
-            setIngredientAmount(undefined)
+        let emptyProduct = {
+            id: null,
+            name: '',
+            image: null,
+            description: '',
+            category: null,
+            price: 0,
+            quantity: 0,
+            rating: 0,
+            inventoryStatus: 'INSTOCK'
         }
 
-        const onClickCreateIngredient = () => {
-            setShowCreateIngredientGroup(true)
+        const [ingredientName, setIngredientName] = useState<string>()
+        const [ingredientLot, setIngredientLot] = useState<string>()
+        const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>({ name: undefined, lot: undefined })
+        const [products, setProducts] = useState(null)
+        const [product, setProduct] = useState(emptyProduct)
+        const [submitted, setSubmitted] = useState(false)
+        const [productDialog, setProductDialog] = useState(false)
+        const [deleteProductsDialog, setDeleteProductsDialog] = useState(false)
+        const [selectedProducts, setSelectedProducts] = useState(null)
+        const dt = useRef(null)
+        const [globalFilter, setGlobalFilter] = useState(null)
+
+        const [visibleDialog, setVisibleDialog] = useState<boolean>(false)
+        const footerContent = (
+            <div>
+                <Button label="Cancel" icon="pi pi-times" onClick={() => setVisibleDialog(false)} className="p-button-text" />
+                <Button label="Add Ingredient" icon="pi pi-check" onClick={() => onClickPrepareIngredient()} autoFocus />
+            </div>
+        )
+        const header = (
+            <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
+                <h4 className="m-0">Manage Products</h4>
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={e => setGlobalFilter(e.target.value)} placeholder="Search..." />
+                </span>
+            </div>
+        )
+
+        const onClickPrepareIngredient = () => {
+            setIngredients([...ingredients, { name: ingredientName, lot: ingredientLot }])
+            setIngredientName('')
+            setIngredientLot('')
+            setVisibleDialog(false)
+        }
+
+        const leftToolbarTemplate = () => {
+            return (
+                <div className="flex flex-wrap gap-2">
+                    <Button
+                        label="New"
+                        icon="pi pi-plus"
+                        severity="success"
+                        onClick={openNew}
+                    />
+                    <Button
+                        label="Delete"
+                        icon="pi pi-trash"
+                        severity="danger"
+                        onClick={confirmDeleteSelected}
+                        disabled={!selectedProducts || !selectedProducts.length}
+                    />
+                </div>
+            )
+        }
+
+        const confirmDeleteSelected = () => {
+            setDeleteProductsDialog(true)
+        }
+
+        const openNew = () => {
+            setProduct(emptyProduct)
+            setSubmitted(false)
+            setProductDialog(true)
+        }
+
+        const rightToolbarTemplate = () => {
+            return <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
+        }
+
+        const exportCSV = () => {
+            dt.current?.exportCSV()
         }
 
         return (
             <div>
                 <Button
-                    type="submit"
                     label="Create Ingredient"
-                    icon="pi pi-check"
-                    className="p-ml-2"
-                    onClick={e => onClickCreateIngredient()}
+                    icon="pi pi-external-link"
+                    onClick={() => setVisibleDialog(true)}
                 />
-                {
-                    showCreateIngredientGroup &&
+                <Dialog header="New Ingredient" visible={visibleDialog} style={{ width: '50vw' }} onHide={() => setVisibleDialog(false)} footer={footerContent}>
                     <div className="card">
                         <div className="p-fluid p-grid">
                             <div className="p-field p-col-12 p-md-4" style={{ marginTop: 30 }}>
@@ -60,36 +124,27 @@ export const IngredientComponent: FC<{
                                     <label htmlFor="inputLot">Ingredient lot</label>
                                 </span>
                             </div>
-                            <div className="p-field p-col-12 p-md-4" style={{ marginTop: 30 }}>
-                                <span className="p-float-label">
-                                    <InputNumber
-                                        id="inputMeasure"
-                                        value={ingredientAmount}
-                                        onChange={e => setIngredientAmount(e.value ?? 0)}
-                                    />
-                                    <label htmlFor="inputMeasure">Ingredient amount</label>
-                                    <div className="card flex justify-content-center">
-                                        <Dropdown
-                                            value={selectedUnit}
-                                            onChange={e => setSelectedUnit(e.value)}
-                                            options={measures}
-                                            optionLabel="name"
-                                            placeholder="Select a Measurement"
-                                            className="w-full md:w-14rem"
-                                        />
-                                    </div>
-                                </span>
-                            </div>
                         </div>
-                        <Button
-                            type="submit"
-                            label="Add Ingredient"
-                            icon="pi pi-check"
-                            className="p-ml-2"
-                            onClick={e => onClickPrepareIngredient()}
-                        />
                     </div>
-                }
+                </Dialog>
+
+                <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                <DataTable
+                    ref={dt}
+                    value={ingredients}
+                    selection={selectedIngredient}
+                    onSelectionChange={e => setSelectedIngredient(e.value)}
+                    dataKey="id"
+                    paginator rows={10}
+                    rowsPerPageOptions={[5, 10, 25]}
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                    globalFilter={globalFilter}
+                    header={header}
+                >
+                    <Column field="name" header="Ingredient name"></Column>
+                    <Column field="lot" header="Lot"></Column>
+                </DataTable>
             </div>
         )
     }

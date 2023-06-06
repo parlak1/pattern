@@ -13,7 +13,6 @@ import { IngredientComponent } from './components/IngredientComponent'
 import { Ingredient} from './models/types'
 
 const App = () => {
-
     PrimeReact.ripple = true
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
 

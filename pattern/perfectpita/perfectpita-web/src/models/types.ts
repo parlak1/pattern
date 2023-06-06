@@ -11,6 +11,10 @@ export type Measure = {
 export type Ingredient = {
     name: string | undefined
     lot: string | undefined
+}
+
+export type WorkIngredient = {
+    ingredient: Ingredient
     amount: Measure | undefined
 }
 
