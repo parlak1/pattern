@@ -11,6 +11,8 @@ export type Measure = {
 export type Ingredient = {
     name: string | undefined
     lot: string | undefined
+    severity: "success" | "warning" | "danger" | "info" | null | undefined
+    status: string
 }
 
 export type WorkIngredient = {
@@ -22,7 +24,11 @@ export type StringMap = {
     [key: string]: string
 }
 
-
+export const Severity = {
+    normal: 'success',
+    warning: 'warning',
+    recall: 'danger'
+}
 
 
 

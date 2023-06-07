@@ -3,12 +3,13 @@ import { Dropdown } from "primereact/dropdown"
 import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
 import { Ingredient, Unit, WorkIngredient } from "../models/types"
-import { FC, useState } from "react"
-import { Fieldset } from 'primereact/fieldset';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import { FC, useRef, useState } from "react"
+import { Fieldset } from 'primereact/fieldset'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
 import { measures } from "../common/db"
 import { Dialog } from "primereact/dialog"
+import { Toolbar } from "primereact/toolbar"
 
 export const WorkComponent: FC<{
     ingredients: Ingredient[]
@@ -17,13 +18,25 @@ export const WorkComponent: FC<{
 }) => {
 
         const [workName, setWorkName] = useState<string>()
-        const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>({ name: undefined, lot: undefined })
+        const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>({ name: undefined, lot: undefined, severity: undefined, status: '' })
         const [workIngredients, setWorkIngredients] = useState<Ingredient[]>([])
         const [workLot, setWorkLot] = useState<string>('')
         const [ingredientAmount, setIngredientAmount] = useState<number | undefined>()
         const [selectedUnit, setSelectedUnit] = useState<Unit>()
         const [workIngredientXs, setWorkIngredientXs] = useState<WorkIngredient[]>([])
+        const dt = useRef<any>(null)
+        const [globalFilter, setGlobalFilter] = useState<any>()
+
         const [visibleDialog, setVisibleDialog] = useState<boolean>(false)
+        const header = (
+            <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
+                <h4 className="m-0">Manage Ingredients</h4>
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText type="search" onInput={e => setGlobalFilter((e.target as HTMLInputElement).value)} placeholder="Search..." />
+                </span>
+            </div>
+        )
         const footerContent = (
             <div>
                 <Button label="Cancel" icon="pi pi-times" onClick={() => setVisibleDialog(false)} className="p-button-text" />
@@ -39,7 +52,53 @@ export const WorkComponent: FC<{
         const onClickAddIngredient = () => {
             setWorkIngredients([...workIngredients, selectedIngredient])
             setWorkIngredientXs([...workIngredientXs, { ingredient: selectedIngredient, amount: { mass: ingredientAmount, unit: selectedUnit } }])
+            setVisibleDialog(false)
         }
+
+        const openNew = () => {
+            setProduct(emptyProduct)
+            setSubmitted(false)
+            setProductDialog(true)
+            setVisibleDialog(true)
+        }
+
+        const leftToolbarTemplate = () => {
+            return (
+                <div className="flex flex-wrap gap-2">
+                    <Button
+                        label="New Ingredient"
+                        icon="pi pi-plus"
+                        severity="success"
+                        onClick={openNew}
+                    />
+                    <Button
+                        label="Delete Ingredient"
+                        icon="pi pi-trash"
+                        severity="danger"
+                        onClick={confirmDeleteSelected}
+                        disabled={!selectedProducts || !selectedProducts.length}
+                    />
+                </div>
+            )
+        }
+
+        const statusBodyTemplate = (ingredinet: Ingredient) => <Button label="See where it is used" link />
+
+        const rightToolbarTemplate = () => 
+            <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
+
+            const onRowEditComplete = (e: any) => {
+                let _ingredients = [...ingredients]
+                let { newData, index } = e
+    
+                _ingredients[index] = newData
+    
+                setSelectedIngredient(_ingredients)
+            }
+    
+            const textEditor = (options: any) => {
+                return <InputText type="text" value={options.value} onChange={e => options.editorCallback(e.target.value)} />;
+            }
 
         return (
             <div>
@@ -97,6 +156,29 @@ export const WorkComponent: FC<{
                         </div>
                     </div>
                 </Dialog>
+                <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                <DataTable
+                    ref={dt}
+                    value={works}
+                    selection={selectedWork}
+                    onSelectionChange={e => setSelectedWork(e.value)}
+                    dataKey="id"
+                    paginator
+                    rows={10}
+                    editMode="row"
+                    onRowEditComplete={onRowEditComplete}
+                    rowsPerPageOptions={[5, 10, 25]}
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                    globalFilter={globalFilter}
+                    header={header}
+                >
+                    <Column field="name" header="Work name" editor={(options) => textEditor(options)}></Column>
+                    <Column field="lot" header="Lot" editor={(options) => textEditor(options)}></Column>
+                    <Column header="Ingredients used" body={statusBodyTemplate}></Column>
+                    <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
+                </DataTable>
+
                 <Fieldset legend={workName}>
                     <p className="m-0">
                         Work lot: {workLot}

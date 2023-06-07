@@ -7,6 +7,7 @@ import { Dialog } from 'primereact/dialog'
 import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 import { Toolbar } from 'primereact/toolbar'
+import { Tag } from 'primereact/tag'
 
 export const IngredientComponent: FC<{
     ingredients: Ingredient[],
@@ -30,8 +31,7 @@ export const IngredientComponent: FC<{
 
         const [ingredientName, setIngredientName] = useState<string>()
         const [ingredientLot, setIngredientLot] = useState<string>()
-        const [selectedIngredient, setSelectedIngredient] = useState<any>({ name: undefined, lot: undefined })
-        const [products, setProducts] = useState(null)
+        const [selectedIngredient, setSelectedIngredient] = useState<any>()
         const [product, setProduct] = useState(emptyProduct)
         const [submitted, setSubmitted] = useState(false)
         const [productDialog, setProductDialog] = useState(false)
@@ -42,7 +42,7 @@ export const IngredientComponent: FC<{
         const [visibleDialog, setVisibleDialog] = useState<boolean>(false)
         const header = (
             <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-                <h4 className="m-0">Manage Products</h4>
+                <h4 className="m-0">Manage Ingredients</h4>
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText type="search" onInput={e => setGlobalFilter((e.target as HTMLInputElement).value)} placeholder="Search..." />
@@ -57,10 +57,10 @@ export const IngredientComponent: FC<{
         )
 
         const onClickPrepareIngredient = () => {
-            setIngredients([...ingredients, { name: ingredientName, lot: ingredientLot }])
+            setIngredients([...ingredients, { name: ingredientName, lot: ingredientLot, severity: 'success', status: 'normal' }])
             setIngredientName('')
             setIngredientLot('')
-            setVisibleDialog(true)
+            setVisibleDialog(false)
         }
 
         const leftToolbarTemplate = () => {
@@ -94,12 +94,29 @@ export const IngredientComponent: FC<{
             setVisibleDialog(true)
         }
 
-        const rightToolbarTemplate = () => {
-            return <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
-        }
+        const rightToolbarTemplate = () => 
+            <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
 
         const exportCSV = () => {
             dt.current?.exportCSV()
+        }
+
+        const statusBodyTemplate = (ingredinet: Ingredient) => {
+            // return <Tag value={ingredinet.status} severity={ingredinet.severity}></Tag>
+            return <Button label="See where it is used" link />
+        }
+
+        const onRowEditComplete = (e: any) => {
+            let _ingredients = [...ingredients]
+            let { newData, index } = e
+
+            _ingredients[index] = newData
+
+            setSelectedIngredient(_ingredients)
+        }
+
+        const textEditor = (options: any) => {
+            return <InputText type="text" value={options.value} onChange={e => options.editorCallback(e.target.value)} />;
         }
 
         return (
@@ -109,11 +126,11 @@ export const IngredientComponent: FC<{
                     icon="pi pi-external-link"
                     onClick={() => setVisibleDialog(true)}
                 /> */}
-                <Dialog 
-                    header="Create New Ingredient" 
-                    visible={visibleDialog} 
-                    style={{ width: '50vw' }} 
-                    onHide={() => setVisibleDialog(false)} 
+                <Dialog
+                    header="Create New Ingredient"
+                    visible={visibleDialog}
+                    style={{ width: '50vw' }}
+                    onHide={() => setVisibleDialog(false)}
                     footer={footerContent}
                 >
                     <div className="card">
@@ -141,15 +158,20 @@ export const IngredientComponent: FC<{
                     selection={selectedIngredient}
                     onSelectionChange={e => setSelectedIngredient(e.value)}
                     dataKey="id"
-                    paginator rows={10}
+                    paginator
+                    rows={10}
+                    editMode="row"
+                    onRowEditComplete={onRowEditComplete}
                     rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                     globalFilter={globalFilter}
                     header={header}
                 >
-                    <Column field="name" header="Ingredient name"></Column>
-                    <Column field="lot" header="Lot"></Column>
+                    <Column field="name" header="Ingredient name" editor={(options) => textEditor(options)}></Column>
+                    <Column field="lot" header="Lot" editor={(options) => textEditor(options)}></Column>
+                    <Column header="Works it is used" body={statusBodyTemplate}></Column>
+                    <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 </DataTable>
             </div>
         )
