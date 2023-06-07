@@ -1,53 +1,55 @@
-    export type ObjeTipim = {
-        ilk: number,
-        ikinci: number
-    }
+export type ObjeTipim = {
+    ilk: number,
+    ikinci: number
+}
 
-    function returnSingleValue(inputA: number, inputB: number) { // 3, 5
-        return inputA + inputB
-    } // 8
+function returnSingleValue(inputA: number, inputB: number) { // 3, 5
+    return inputA + inputB
+} // 8
 
-    function returnMultiValue(inputA: number, inputB: number): ObjeTipim { // 3, 5
-        return {"ilk":inputA*2, "ikinci":inputB*3}
-        // return [inputA*2, inputB*3]
-        
-    } // [6, 15]
-    // {"ilk":6, "ikici":15}
+function returnMultiValue(inputA: number, inputB: number): ObjeTipim { // 3, 5
+    return { "ilk": inputA * 2, "ikinci": inputB * 3 }
+    // return [inputA*2, inputB*3]
 
-    let a = {} // obje
-    let b = [] // array
-    let c = () => {} // function
+} // [6, 15]
+// {"ilk":6, "ikici":15}
 
-    let d:string
-    let e:number
-    let f:boolean
-    let g:null
-    let h:undefined
-    let i:unknown
-    let j:any
-    let k:void
-    let l:never
-    let m:object
+let a = {} // obje
+let b = [] // array
+let c = () => { } // function
 
-    const mySuperCallerFunction = () =>{
-        let acabaNe: ObjeTipim
-        // acabaNe = returnSingleValue(2, 3) // 5
-        acabaNe = returnMultiValue(4, 5) // {"ilk": 8, "ikinci": 15}
+let d: string
+let e: number
+let f: boolean
+let g: null
+let h: undefined
+let i: unknown
+let j: any
+let k: void
+let l: never
+let m: object
 
-        let {ilk, ikinci} = acabaNe
+const mySuperCallerFunction = () => {
+    let acabaNe: ObjeTipim
+    // acabaNe = returnSingleValue(2, 3) // 5
+    acabaNe = returnMultiValue(4, 5) // {"ilk": 8, "ikinci": 15}
 
-        // let mySyperArr = ['apple', 'orange']
-        let[ilkim, ikincim] = ['apple', 'orange'] 
-        // ilkim = 'apple'
-        // ikincim = 'orange'
-    }
+    let { ilk, ikinci } = acabaNe
 
-    const spreadOperatorFunc = () => {
-        let myArray = ['elma', 'armut'] // [elma, armut]
-        let myNewArray = [...myArray, 'portakal'] // [elma, armut, portakal]
-        myArray = [...myArray, 'karpuz'] // [elma, armut, karpuz]
-    }
+    // let mySyperArr = ['apple', 'orange']
+    let [ilkim, ikincim] = ['apple', 'orange']
+    // ilkim = 'apple'
+    // ikincim = 'orange'
+}
 
-    /*Object.keys(obj).forEach((prop)=> console.log(prop));*/
+const spreadOperatorFunc = () => {
+    let myArray = ['elma', 'armut'] // [elma, armut]
+    let myNewArray = [...myArray, 'portakal'] // [elma, armut, portakal]
+    myArray = [...myArray, 'karpuz'] // [elma, armut, karpuz]
+}
 
-    
+/*Object.keys(obj).forEach((prop)=> console.log(prop));*/
+
+
+https://www.primefaces.org/diamond/icons.xhtml
+https://primereact.org/datatable/
