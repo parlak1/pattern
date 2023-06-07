@@ -48,8 +48,11 @@ const spreadOperatorFunc = () => {
     myArray = [...myArray, 'karpuz'] // [elma, armut, karpuz]
 }
 
-/*Object.keys(obj).forEach((prop)=> console.log(prop));*/
 
-
+/*
 https://www.primefaces.org/diamond/icons.xhtml
 https://primereact.org/datatable/
+
+
+Object.keys(obj).forEach((prop)=> console.log(prop))
+*/
