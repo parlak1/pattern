@@ -47,8 +47,7 @@ export const IngredientDialog: FC<{
                 dateCreated: getNow(),
                 createdBy: 'ahmet sallabas'
             }])
-            // setIngredientName('')
-            // setIngredientLot('')
+            setIngredient({})
             setVisibleDialog(false)
         }
 
