@@ -57,12 +57,8 @@ export const IngredientComponent: FC<{
         )
 
 
-        const onClickCreate = (e: any): void => {
-            setVisibleDialog(true)
-        }
-
-        const onClickUsage = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>): void => {
-            setDialogHeader(() => `Update ${e.target}`)
+        const onClickUsage = (e: any): void => {
+            setDialogHeader(() => `Details for ${e.target.value}`)
             setVisibleDialog(true)
         }
 
@@ -72,12 +68,11 @@ export const IngredientComponent: FC<{
         }
 
         const onClickDelete = (e: any): void => {
-            setDialogHeader(() => `Update ${e.target.value}`)
+            setDialogHeader(() => `Delete ${e.target.value}`)
             setVisibleDialog(true)
         }
 
         const statusBodyTemplate = (ingredinet: Ingredient): ReactElement => {
-            // return <Tag value={ingredinet.status} severity={ingredinet.severity}></Tag>
             return <>
                 <Button
                     title="Usage: see where this ingredient is used"
@@ -109,15 +104,6 @@ export const IngredientComponent: FC<{
         const dateBodyTemplate = (ingredinet: Ingredient) =>
             <>{new Date(ingredinet.dateCreated ?? 0).toLocaleDateString("en-GB", { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}</>
 
-        const onRowEditComplete = (e: any) => {
-            let _ingredients = [...ingredients]
-            let { newData, index } = e
-
-            _ingredients[index] = newData
-
-            setSelectedIngredient(_ingredients)
-        }
-
         return (
             <div>
                 <DataTable
@@ -128,8 +114,6 @@ export const IngredientComponent: FC<{
                     dataKey="id"
                     paginator
                     rows={10}
-                    editMode="row"
-                    onRowEditComplete={onRowEditComplete}
                     rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
@@ -144,6 +128,7 @@ export const IngredientComponent: FC<{
                     <Column field="dateCreated" header="Date Created" body={dateBodyTemplate} sortable></Column>
                     <Column body={statusBodyTemplate} headerStyle={{ width: '148px' }}></Column>
                 </DataTable>
+
                 <IngredientDialog
                     dialogHeader={dialogHeader}
                     visibleDialog={visibleDialog}
@@ -154,3 +139,10 @@ export const IngredientComponent: FC<{
             </div>
         )
     }
+
+            // return <Tag value={ingredinet.status} severity={ingredinet.severity}></Tag>
+
+    // const onClickUsage = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>): void => {
+    //     setDialogHeader(() => `Update ${e.target}`)
+    //     setVisibleDialog(true)
+    // }

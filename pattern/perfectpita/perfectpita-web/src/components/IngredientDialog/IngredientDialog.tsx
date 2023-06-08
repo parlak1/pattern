@@ -19,42 +19,40 @@ export const IngredientDialog: FC<{
     ingredients,
     setIngredients
 }) => {
-    // const [ingredientName, setIngredientName] = useState<string>()
-    // const [ingredientLot, setIngredientLot] = useState<string>()
-    // const [ingredientAmount, setIngredientAmount] = useState<number>()
-    const [ingredient, setIngredient] = useState<Ingredient>({})
 
-    const footerContent = (
-        <div>
-            <Button
-                label="Cancel"
-                icon="pi pi-times"
-                onClick={() => setVisibleDialog(false)}
-                className="p-button-text"
-            />
-            <Button
-                label="Add Ingredient"
-                icon="pi pi-check"
-                onClick={() => onClickPrepareIngredient()}
-                autoFocus
-            />
-        </div>
-    )
+        const [ingredient, setIngredient] = useState<Ingredient>({})
 
-    const onClickPrepareIngredient = () => {
-        setIngredients([...ingredients, {
-            name: ingredient.name,
-            lot: ingredient.lot,
-            amount: ingredient.amount,
-            dateCreated: getNow(),
-            createdBy: 'ahmet sallabas'
-        }])
-        // setIngredientName('')
-        // setIngredientLot('')
-        setVisibleDialog(false)
-    }
+        const footerContent = (
+            <div>
+                <Button
+                    label="Cancel"
+                    icon="pi pi-times"
+                    onClick={() => setVisibleDialog(false)}
+                    className="p-button-text"
+                />
+                <Button
+                    label="Add Ingredient"
+                    icon="pi pi-check"
+                    onClick={() => onClickPrepareIngredient()}
+                    autoFocus
+                />
+            </div>
+        )
 
-    const getNow = (): number => new Date().getTime()
+        const onClickPrepareIngredient = () => {
+            setIngredients([...ingredients, {
+                name: ingredient.name,
+                lot: ingredient.lot,
+                amount: ingredient.amount,
+                dateCreated: getNow(),
+                createdBy: 'ahmet sallabas'
+            }])
+            // setIngredientName('')
+            // setIngredientLot('')
+            setVisibleDialog(false)
+        }
+
+        const getNow = (): number => new Date().getTime()
 
         return (
             <Dialog
@@ -71,7 +69,7 @@ export const IngredientDialog: FC<{
                                 <InputText
                                     id="inputName"
                                     value={ingredient.name}
-                                    onChange={e => setIngredient(ingredient => {ingredient.name = e.target.value; return ingredient})}
+                                    onChange={e => setIngredient(ingredient => { ingredient.name = e.target.value; return ingredient })}
                                 />
                                 <label htmlFor="inputName">Name</label>
                             </span>
@@ -81,7 +79,7 @@ export const IngredientDialog: FC<{
                                 <InputText
                                     id="inputLot"
                                     value={ingredient.lot}
-                                    onChange={e => setIngredient(ingredient => {ingredient.lot = e.target.value; return ingredient})}
+                                    onChange={e => setIngredient(ingredient => { ingredient.lot = e.target.value; return ingredient })}
                                 />
                                 <label htmlFor="inputLot">Lot</label>
                             </span>
@@ -91,7 +89,7 @@ export const IngredientDialog: FC<{
                                 <InputNumber
                                     id="inputAmount"
                                     value={ingredient.amount}
-                                    onChange={e => setIngredient(ingredient => {ingredient.amount = e.value ?? 0; return ingredient})}
+                                    onChange={e => setIngredient(ingredient => { ingredient.amount = e.value ?? 0; return ingredient })}
                                 />
                                 <label htmlFor="inputAmount">Amount</label>
                             </span>
