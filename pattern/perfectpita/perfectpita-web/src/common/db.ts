@@ -1,3 +1,5 @@
+import { Ingredient } from "../models/types"
+
 export const measures = [
     { name: 'Pound', code: 'lb' },
     { name: 'Ounce', code: 'oz' },
@@ -5,3 +7,5 @@ export const measures = [
     { name: 'Gram', code: 'g' },
     { name: 'Liter', code: 'l' }
 ]
+
+export const emptyIngredient: Ingredient = {}

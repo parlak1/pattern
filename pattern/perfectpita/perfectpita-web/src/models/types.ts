@@ -1,23 +1,47 @@
 export type Unit = {
-    name: string | undefined
-    code: string | undefined
+    name?: string
+    code?: string
 }
 
 export type Measure = {
-    mass: number | undefined
-    unit: Unit | undefined
+    mass?: number
+    unit?: Unit
 }
 
 export type Ingredient = {
-    name: string | undefined
-    lot: string | undefined
-    severity: "success" | "warning" | "danger" | "info" | null | undefined
-    status: string
+    id?: string
+    name?: string
+    lot?: string
+    severity?: string
+    status?: string
+    image?: string
+    description?: string
+    category?: string
+    price?: number
+    quantity?: number
+    amount?: number
+    rating?: number
+    inventoryStatus?: 'INSTOCK' | 'OUTOFSTOCK'
+    dateCreated?: number
+    createdBy?:string
+    dateUpdated?: number
+    updatedBy?: string
+}
+
+
+export type Work = {
+    name?: string
+    lot?: string
+    workIngredients?: WorkIngredient[]
+    dateCreated?: number
+    createdBy?:string
+    dateUpdated?: number
+    updatedBy?: string
 }
 
 export type WorkIngredient = {
-    ingredient: Ingredient
-    amount: Measure | undefined
+    ingredient?: Ingredient
+    amount?: Measure
 }
 
 export type StringMap = {
@@ -29,6 +53,5 @@ export const Severity = {
     warning: 'warning',
     recall: 'danger'
 }
-
 
 

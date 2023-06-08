@@ -2,23 +2,37 @@ import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
 import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
-import { Ingredient, Unit, WorkIngredient } from "../models/types"
+import { Ingredient, Unit, Work, WorkIngredient } from "../../models/types"
 import { FC, useRef, useState } from "react"
 import { Fieldset } from 'primereact/fieldset'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
-import { measures } from "../common/db"
+import { measures } from "../../common/db"
 import { Dialog } from "primereact/dialog"
 import { Toolbar } from "primereact/toolbar"
 
 export const WorkComponent: FC<{
-    ingredients: Ingredient[]
+    ingredients: Ingredient[],
+    works: Work[],
+    setWorks(work: Work[]): void
 }> = ({
-    ingredients
+    ingredients,
+    works,
+    setWorks
 }) => {
-
+        let emptyProduct = {
+            id: null,
+            name: '',
+            image: null,
+            description: '',
+            category: null,
+            price: 0,
+            quantity: 0,
+            rating: 0,
+            inventoryStatus: 'INSTOCK'
+        }
         const [workName, setWorkName] = useState<string>()
-        const [selectedIngredient, setSelectedIngredient] = useState<Ingredient>({ name: undefined, lot: undefined, severity: undefined, status: '' })
+        const [selectedIngredient, setSelectedIngredient] = useState<any>()
         const [workIngredients, setWorkIngredients] = useState<Ingredient[]>([])
         const [workLot, setWorkLot] = useState<string>('')
         const [ingredientAmount, setIngredientAmount] = useState<number | undefined>()
@@ -26,11 +40,16 @@ export const WorkComponent: FC<{
         const [workIngredientXs, setWorkIngredientXs] = useState<WorkIngredient[]>([])
         const dt = useRef<any>(null)
         const [globalFilter, setGlobalFilter] = useState<any>()
-
+        const [product, setProduct] = useState(emptyProduct)
+        const [selectedWork, setSelectedWork] = useState<any>()
+        const [deleteProductsDialog, setDeleteProductsDialog] = useState(false)
+        const [selectedProducts, setSelectedProducts] = useState<any>(null)
+        const [submitted, setSubmitted] = useState(false)
+        const [productDialog, setProductDialog] = useState(false)
         const [visibleDialog, setVisibleDialog] = useState<boolean>(false)
         const header = (
             <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-                <h4 className="m-0">Manage Ingredients</h4>
+                <h4 className="m-0">Manage Works</h4>
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText type="search" onInput={e => setGlobalFilter((e.target as HTMLInputElement).value)} placeholder="Search..." />
@@ -66,13 +85,13 @@ export const WorkComponent: FC<{
             return (
                 <div className="flex flex-wrap gap-2">
                     <Button
-                        label="New Ingredient"
+                        label="New Work"
                         icon="pi pi-plus"
                         severity="success"
                         onClick={openNew}
                     />
                     <Button
-                        label="Delete Ingredient"
+                        label="Delete Work"
                         icon="pi pi-trash"
                         severity="danger"
                         onClick={confirmDeleteSelected}
@@ -81,32 +100,30 @@ export const WorkComponent: FC<{
                 </div>
             )
         }
+        const confirmDeleteSelected = () => {
+            setDeleteProductsDialog(true)
+        }
 
         const statusBodyTemplate = (ingredinet: Ingredient) => <Button label="See where it is used" link />
 
-        const rightToolbarTemplate = () => 
-            <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />
+        const rightToolbarTemplate = () =>
+            <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={() => dt.current?.exportCSV()} />
 
-            const onRowEditComplete = (e: any) => {
-                let _ingredients = [...ingredients]
-                let { newData, index } = e
-    
-                _ingredients[index] = newData
-    
-                setSelectedIngredient(_ingredients)
-            }
-    
-            const textEditor = (options: any) => {
-                return <InputText type="text" value={options.value} onChange={e => options.editorCallback(e.target.value)} />;
-            }
+        const onRowEditComplete = (e: any) => {
+            let _ingredients = [...ingredients]
+            let { newData, index } = e
+
+            _ingredients[index] = newData
+
+            setSelectedIngredient(_ingredients)
+        }
+
+        const textEditor = (options: any) => {
+            return <InputText type="text" value={options.value} onChange={e => options.editorCallback(e.target.value)} />;
+        }
 
         return (
             <div>
-                <Button
-                    label="Create Work"
-                    icon="pi pi-external-link"
-                    onClick={() => onClickCreateIngredient()}
-                />
                 <Dialog header="Create Work" visible={visibleDialog} style={{ width: '50vw' }} onHide={() => setVisibleDialog(false)} footer={footerContent}>
                     <div className="card">
                         <div className="p-fluid p-grid">
