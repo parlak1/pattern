@@ -9,6 +9,7 @@ import { Button } from "primereact/button"
 import { MultiSelect } from 'primereact/multiselect'
 import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
+import { getNow } from "../../common/util"
 
 export const WorkDialog: FC<{
     dialogHeader: string,
@@ -50,14 +51,14 @@ export const WorkDialog: FC<{
 
         const onClickStartwork = () => {
             setWork(work => setUpWork(work, ingredient, ingredientAmount))
-            setWorks([...works, work])
+            setWorks([work, ...works])
             setWork({ workIngredients: [] })
             setVisibleDialog(false)
 
         }
 
         const setUpWork = (work: Work, ingredient: Ingredient, ingredientAmount: Measure): Work => {
-            work.lot = new Date().getTime().toString()
+            work.lot = getNow().toString()
             work.workIngredients.push({ ingredient: ingredient, amount: ingredientAmount })
             // work.workIngredients
             //     ? work.workIngredients = [...work.workIngredients, { ingredient: ingredient, amount: ingredientAmount }]

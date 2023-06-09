@@ -7,6 +7,7 @@ import './IngredientDialog.css'
 import { Button } from "primereact/button"
 import { Dropdown } from "primereact/dropdown"
 import { measures } from "../../common/db"
+import { getNow } from "../../common/util"
 
 export const IngredientDialog: FC<{
     dialogHeader: string,
@@ -23,7 +24,6 @@ export const IngredientDialog: FC<{
 }) => {
 
         const [ingredient, setIngredient] = useState<Ingredient>({})
-        const [selectedUnit, setSelectedUnit] = useState<Unit>()
 
         const footerContent = (
             <div>
@@ -36,25 +36,23 @@ export const IngredientDialog: FC<{
                 <Button
                     label="Add Ingredient"
                     icon="pi pi-check"
-                    onClick={() => onClickPrepareIngredient()}
+                    onClick={() => onClickCreateIngredient()}
                     autoFocus
                 />
             </div>
         )
 
-        const onClickPrepareIngredient = () => {
-            setIngredients([...ingredients, {
+        const onClickCreateIngredient = () => {
+            setIngredients([{
                 name: ingredient.name,
                 lot: ingredient.lot,
                 amount: ingredient.amount,
                 dateCreated: getNow(),
                 createdBy: 'ahmet sallabas'
-            }])
+            }, ...ingredients])
             setIngredient({})
             setVisibleDialog(false)
         }
-
-        const getNow = (): number => new Date().getTime()
 
         return (
             <Dialog
@@ -71,7 +69,10 @@ export const IngredientDialog: FC<{
                                 <InputText
                                     id="inputName"
                                     value={ingredient.name}
-                                    onChange={e => setIngredient(ingredient => { ingredient.name = e.target.value; return ingredient })}
+                                    onChange={e => setIngredient(old => {
+                                        old.name = e.target.value
+                                        return old
+                                    })}
                                 />
                                 <label htmlFor="inputName">Name</label>
                             </span>
@@ -81,7 +82,10 @@ export const IngredientDialog: FC<{
                                 <InputText
                                     id="inputLot"
                                     value={ingredient.lot}
-                                    onChange={e => setIngredient(ingredient => { ingredient.lot = e.target.value; return ingredient })}
+                                    onChange={e => setIngredient(old => {
+                                        old.lot = e.target.value
+                                        return old
+                                    })}
                                 />
                                 <label htmlFor="inputLot">Lot</label>
                             </span>
@@ -91,19 +95,25 @@ export const IngredientDialog: FC<{
                                 <InputNumber
                                     id="inputAmount"
                                     value={ingredient.amount?.mass}
-                                    onChange={e => setIngredient(ingredient => {
-                                        ingredient.amount 
-                                        ? ingredient.amount.mass = e.value 
-                                        : ingredient.amount.mass = null;
-                                        ingredient.amount ? ingredient.amount.unit = selectedUnit : null;
-                                        return ingredient
-                                    })}
+                                    onChange={e => {setIngredient((old: Ingredient) => {
+                                            let amount = old.amount ?? {}
+                                            amount = {mass: e.value ?? undefined}
+                                            old.amount = amount
+                                            return old
+                                        })
+                                    }
+                                    }
                                 />
                                 <label htmlFor="inputAmount">Amount</label>
                                 <div className="card flex justify-content-center">
                                     <Dropdown
-                                        value={selectedUnit}
-                                        onChange={e => setSelectedUnit(e.value)}
+                                        value={ingredient.amount?.unit}
+                                        onChange={e => setIngredient((old: Ingredient) => {
+                                            let amount = old.amount ?? {}
+                                            amount.unit = e.value
+                                            old.amount = amount
+                                            return old
+                                        })}
                                         options={measures}
                                         optionLabel="name"
                                         placeholder="Select unit"
@@ -117,4 +127,3 @@ export const IngredientDialog: FC<{
             </Dialog>
         )
     }
-//onChange={e => setIngredient((e: any, ingredient: Ingredient) => ingredient.amount = e.value)}

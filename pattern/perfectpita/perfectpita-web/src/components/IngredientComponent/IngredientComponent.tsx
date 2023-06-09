@@ -72,6 +72,9 @@ export const IngredientComponent: FC<{
             setVisibleDialog(true)
         }
 
+        const amountBodyTemplate = (ingredinet: Ingredient): ReactElement =>
+            <>{ingredinet.amount?.mass + ' ' + ingredinet.amount?.unit?.code}</>
+
         const statusBodyTemplate = (ingredinet: Ingredient): ReactElement => {
             return <>
                 <Button
@@ -123,7 +126,7 @@ export const IngredientComponent: FC<{
                 >
                     <Column field="name" header="Name" sortable></Column>
                     <Column field="lot" header="Lot" sortable></Column>
-                    <Column field="amount" header="Amount" sortable></Column>
+                    <Column field="amount" header="Amount" body={amountBodyTemplate} sortable></Column>
                     <Column field="createdBy" header="Created By" sortable></Column>
                     <Column field="dateCreated" header="Date Created" body={dateBodyTemplate} sortable></Column>
                     <Column body={statusBodyTemplate} headerStyle={{ width: '148px' }}></Column>
