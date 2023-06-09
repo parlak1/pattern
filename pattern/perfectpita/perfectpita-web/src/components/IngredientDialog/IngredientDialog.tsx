@@ -87,8 +87,8 @@ export const IngredientDialog: FC<{
                             <span className="p-float-label">
                                 <InputNumber
                                     id="inputAmount"
-                                    value={ingredient.amount}
-                                    onChange={e => setIngredient(ingredient => { ingredient.amount = e.value ?? 0; return ingredient })}
+                                    value={ingredient.amount?.mass}
+                                    // onChange={e => setIngredient(ingredient => { ingredient.amount?.mass = e.value ?? 0; return ingredient })}
                                 />
                                 <label htmlFor="inputAmount">Amount</label>
                             </span>

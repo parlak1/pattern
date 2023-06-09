@@ -4,8 +4,9 @@ import { DataTable } from 'primereact/datatable'
 import { Fieldset } from 'primereact/fieldset'
 import { InputText } from "primereact/inputtext"
 import { FC, useRef, useState } from "react"
-import { Ingredient, Unit, Work } from "../../models/types"
+import { Ingredient, Unit, Work, WorkIngredient } from "../../models/types"
 import { WorkDialog } from "../WorkDialog/WorkDialog"
+import { Chip } from 'primereact/chip'
 
 export const WorkComponent: FC<{
     ingredients: Ingredient[],
@@ -22,16 +23,14 @@ export const WorkComponent: FC<{
         const [selectedWork, setSelectedWork] = useState<any>()
         const [visibleDialog, setVisibleDialog] = useState<boolean>(false)
 
-
         const openNew = () => {
             setVisibleDialog(true)
-            // setDialogHeader('New Ingredient')
+            setDialogHeader('Create Work')
         }
 
         const exportCSV = () => {
             dt.current?.exportCSV()
         }
-
 
         const header = (
             <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
@@ -60,9 +59,22 @@ export const WorkComponent: FC<{
             </div>
         )
 
+
+        const bodyTemplate = (workIngredients: WorkIngredient[]) => 
+        JSON.stringify(workIngredients)
+            // workIngredients.map(wi => wi.ingredient?.name + ' ' + wi.ingredient?.amount?.unit)
+            // .ingredientAmount + ' ' + selectedUnit?.code
+        
+
+        const workIngredientsBody = (work: Work) =>
+            <DataTable value={work.workIngredients} tableStyle={{ minWidth: '50rem' }}>
+                <Column field="name" header="Ingredient name"></Column>
+                <Column field="lot" header="Ingredient lot" body={workIngredient => workIngredient.}></Column>
+                <Column field="workIngredients" header="Ingredient amount" body={workIngredient => workIngredient.amount}></Column>
+            </DataTable>
+
         return (
             <div>
-
                 <DataTable
                     ref={dt}
                     value={works}
@@ -78,21 +90,17 @@ export const WorkComponent: FC<{
                     header={header}
                 >
                     <Column field="name" header="Name"></Column>
-                    <Column field="lot" header="Lot" ></Column>
-                    <Column field="workIngredients" header="Ingredients used" body={work => JSON.stringify(work.workIngredients)}></Column>
-                    <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
+                    <Column field="lot" header="Lot"></Column>
+                    <Column field="workIngredients" header="Ingredients used" body={workIngredientsBody} style={{padding: 0}}></Column>
                 </DataTable>
 
-                {/* <Fieldset legend="work.name">
-                    <p className="m-0">
-                        Work lot: "work.lot"
-                    </p>
+                {/*
                     <DataTable value={workIngredients} tableStyle={{ minWidth: '50rem' }}>
                         <Column field="name" header="Ingredient name"></Column>
                         <Column field="lot" header="Lot"></Column>
                         <Column field="measure" header="Amount" body={ingredientAmount + ' ' + selectedUnit?.code}></Column>
                     </DataTable>
-                </Fieldset> */}
+                */}
 
                 <WorkDialog
                     dialogHeader={dialogHeader}

@@ -6,6 +6,7 @@ import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
 import { measures } from "../../common/db"
 import { Button } from "primereact/button"
+import { MultiSelect } from 'primereact/multiselect'
 
 export const WorkDialog: FC<{
     dialogHeader: string,
@@ -22,7 +23,7 @@ export const WorkDialog: FC<{
     works,
     setWorks
 }) => {
-        const [work, setWork] = useState<Work>({})
+        const [work, setWork] = useState<Work>({workIngredients: []})
         const [ingredient, setIngredient] = useState<Ingredient>({})
         const [ingredientAmount, setIngredientAmount] = useState<any>()
         const [selectedUnit, setSelectedUnit] = useState<Unit>()
@@ -45,21 +46,40 @@ export const WorkDialog: FC<{
         )
 
         const onClickStartwork = () => {
-            setWork(work => setWorkIngredients(work, ingredient, ingredientAmount))
+            setWork(work => setUpWork(work, ingredient, ingredientAmount))
             setWorks([...works, work])
+            setWork({workIngredients: []})
             setVisibleDialog(false)
+
         }
 
-        const setWorkIngredients = (work: Work, ingredient: Ingredient, ingredientAmount: Measure): Work => {
-            work.workIngredients
-                ? work.workIngredients = [...work.workIngredients, { ingredient: ingredient, amount: ingredientAmount }]
-                : work.workIngredients = [{ ingredient: ingredient, amount: ingredientAmount }]
+        const setUpWork = (work: Work, ingredient: Ingredient, ingredientAmount: Measure): Work => {
+            work.lot = new Date().getTime().toString()
+            work.workIngredients.push({ ingredient: ingredient, amount: ingredientAmount })
+            // work.workIngredients
+            //     ? work.workIngredients = [...work.workIngredients, { ingredient: ingredient, amount: ingredientAmount }]
+            //     : work.workIngredients = [{ ingredient: ingredient, amount: ingredientAmount }]
             return work
         }
 
+        const groupedItemTemplate = (option: any) => {
+            return 'xxx'
+            // return (
+            //     <div className="flex align-items-center">
+            //         <img alt={option.label} src="https://primefaces.org/cdn/primereact/images/flag/flag_placeholder.png" className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px' }} />
+            //         <div>{option.label}</div>
+            //     </div>
+            // )
+        }
 
         return (
-            <Dialog header="Create Work" visible={visibleDialog} style={{ width: '50vw' }} onHide={() => setVisibleDialog(false)} footer={footerContent}>
+            <Dialog
+                header={dialogHeader}
+                visible={visibleDialog}
+                style={{ width: '50vw' }}
+                onHide={() => setVisibleDialog(false)}
+                footer={footerContent}
+            >
                 <div className="card">
                     <div className="p-fluid p-grid">
                         <div className="p-field p-col-12 p-md-4" style={{ marginTop: 30 }}>
@@ -100,6 +120,18 @@ export const WorkDialog: FC<{
                                         placeholder="Select a Measurement"
                                         className="w-full md:w-14rem"
                                     />
+                                    {/* <MultiSelect
+                                        value={ingredient}
+                                        options={ingredients}
+                                        onChange={(e) => setIngredient(e.value)}
+                                        optionLabel="label"
+                                        optionGroupLabel="label"
+                                        optionGroupChildren="items"
+                                        optionGroupTemplate={groupedItemTemplate}
+                                        placeholder="Select Ingredients"
+                                        display="chip"
+                                        className="w-full md:w-20rem"
+                                    /> */}
                                     <label htmlFor="inputIngredient">Ingredient</label>
                                 </div>
                             </span>

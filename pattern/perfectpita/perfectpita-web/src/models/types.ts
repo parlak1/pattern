@@ -19,20 +19,21 @@ export type Ingredient = {
     category?: string
     price?: number
     quantity?: number
-    amount?: number
+    amount?: Measure
     rating?: number
     inventoryStatus?: 'INSTOCK' | 'OUTOFSTOCK'
     dateCreated?: number
     createdBy?:string
     dateUpdated?: number
     updatedBy?: string
+    expirationDate?: number
 }
 
 
 export type Work = {
     name?: string
     lot?: string
-    workIngredients?: WorkIngredient[]
+    workIngredients: WorkIngredient[]
     dateCreated?: number
     createdBy?:string
     dateUpdated?: number
