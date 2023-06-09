@@ -4,7 +4,7 @@ export type Unit = {
 }
 
 export type Measure = {
-    mass?: number
+    mass: number | null
     unit?: Unit
 }
 

@@ -3,7 +3,7 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Fieldset } from 'primereact/fieldset'
 import { InputText } from "primereact/inputtext"
-import { FC, useRef, useState } from "react"
+import { FC, ReactElement, useRef, useState } from "react"
 import { Ingredient, Unit, Work, WorkIngredient } from "../../models/types"
 import { WorkDialog } from "../WorkDialog/WorkDialog"
 import { Chip } from 'primereact/chip'
@@ -60,18 +60,75 @@ export const WorkComponent: FC<{
         )
 
 
-        const bodyTemplate = (workIngredients: WorkIngredient[]) => 
-        JSON.stringify(workIngredients)
-            // workIngredients.map(wi => wi.ingredient?.name + ' ' + wi.ingredient?.amount?.unit)
-            // .ingredientAmount + ' ' + selectedUnit?.code
-        
+        const bodyTemplate = (workIngredients: WorkIngredient[]) =>
+            JSON.stringify(workIngredients)
+        // workIngredients.map(wi => wi.ingredient?.name + ' ' + wi.ingredient?.amount?.unit)
+        // .ingredientAmount + ' ' + selectedUnit?.code
+
 
         const workIngredientsBody = (work: Work) =>
-            <DataTable value={work.workIngredients} tableStyle={{ minWidth: '50rem' }}>
-                <Column field="name" header="Ingredient name"></Column>
-                <Column field="lot" header="Ingredient lot" body={workIngredient => workIngredient.}></Column>
-                <Column field="workIngredients" header="Ingredient amount" body={workIngredient => workIngredient.amount}></Column>
+            <DataTable value={work.workIngredients} tableStyle={{ minWidth: '50rem' }} showGridlines >
+                <Column
+                    field="name"
+                    header="Ingredient name"
+                    body={workIngredient => workIngredient.ingredient.name}
+                />
+                <Column
+                    field="lot"
+                    header="Ingredient lot"
+                    body={workIngredient => workIngredient.ingredient.lot}
+                />
+                <Column
+                    field="workIngredients"
+                    header="Ingredient amount"
+                    headerStyle={{ textAlign: "center" }}
+                    body={workIngredient => workIngredient.amount + ' ' + workIngredient.measure?.unit?.code}
+                />
             </DataTable>
+
+        const statusBodyTemplate = (ingredinet: Ingredient): ReactElement => {
+            return <>
+                <Button
+                    title="See the work details"
+                    icon="pi pi-question"
+                    onClick={e => onClickUsage(e)}
+                    severity="help"
+                    rounded
+                    text
+                />
+                <Button
+                    title="Update"
+                    icon="pi pi-pencil"
+                    onClick={e => onClickUpdate(e)}
+                    severity="secondary"
+                    rounded
+                    text
+                />
+                <Button
+                    title="Delete"
+                    icon="pi pi-trash"
+                    onClick={e => onClickDelete(e)}
+                    severity="danger"
+                    rounded
+                    text
+                />
+            </>
+        }
+
+        const onClickUsage = (e: any): void => {
+            setDialogHeader(() => `Details for ${e.target.value}`)
+            setVisibleDialog(true)
+        }
+
+        const onClickUpdate = (e: any): void => {
+            setDialogHeader(() => `Update ${e.target.value}`)
+            setVisibleDialog(true)
+        }
+
+        const onClickDelete = (e: any): void => {
+            setDialogHeader(() => `Delete ${e.target.value}`)
+            setVisibleDialog(true)
+        }
 
         return (
             <div>
@@ -89,9 +146,34 @@ export const WorkComponent: FC<{
                     globalFilter={globalFilter}
                     header={header}
                 >
-                    <Column field="name" header="Name"></Column>
-                    <Column field="lot" header="Lot"></Column>
-                    <Column field="workIngredients" header="Ingredients used" body={workIngredientsBody} style={{padding: 0}}></Column>
+                    <Column
+                        field="name"
+                        header="Name"
+                        headerTooltip="Work name"
+                        headerTooltipOptions={{ position: "bottom" }}
+                    />
+                    <Column
+                        field="lot"
+                        header="Lot"
+                        headerTooltip="Work lot"
+                        headerTooltipOptions={{ position: "bottom" }}
+                    />
+                    <Column
+                        field="workIngredients"
+                        header="Ingredients used"
+                        headerTooltipOptions={{ position: "bottom" }}
+                        headerStyle={{ textAlign: "center" }}
+                        headerTooltip="Ingredients used in a given work"
+                        body={workIngredientsBody}
+                        style={{ padding: 0 }}
+                    />
+                    <Column
+                        headerTooltip="Manage a work"
+                        headerTooltipOptions={{ position: "bottom" }}
+                        body={statusBodyTemplate}
+                        headerStyle={{ width: '148px' }}
+                        header={<Button icon="pi pi-cog" rounded text aria-label="Manage" />}
+                    />
                 </DataTable>
 
                 {/*

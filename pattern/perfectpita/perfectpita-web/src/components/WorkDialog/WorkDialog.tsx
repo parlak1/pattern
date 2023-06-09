@@ -7,6 +7,8 @@ import { InputText } from "primereact/inputtext"
 import { measures } from "../../common/db"
 import { Button } from "primereact/button"
 import { MultiSelect } from 'primereact/multiselect'
+import { Column } from "primereact/column"
+import { DataTable } from "primereact/datatable"
 
 export const WorkDialog: FC<{
     dialogHeader: string,
@@ -23,10 +25,11 @@ export const WorkDialog: FC<{
     works,
     setWorks
 }) => {
-        const [work, setWork] = useState<Work>({workIngredients: []})
+        const [work, setWork] = useState<Work>({ workIngredients: [] })
         const [ingredient, setIngredient] = useState<Ingredient>({})
         const [ingredientAmount, setIngredientAmount] = useState<any>()
         const [selectedUnit, setSelectedUnit] = useState<Unit>()
+        const [selectedIngredients, setSelectedIngredients] = useState<any>(null)
 
         const footerContent = (
             <div>
@@ -48,7 +51,7 @@ export const WorkDialog: FC<{
         const onClickStartwork = () => {
             setWork(work => setUpWork(work, ingredient, ingredientAmount))
             setWorks([...works, work])
-            setWork({workIngredients: []})
+            setWork({ workIngredients: [] })
             setVisibleDialog(false)
 
         }
@@ -89,7 +92,7 @@ export const WorkDialog: FC<{
                             </span>
                         </div>
                         <div className="p-field p-col-12 p-md-4" style={{ marginTop: 30 }}>
-                            <span className="p-float-label">
+                            <span className="p-float-label flex justify-content-center">
                                 <InputNumber
                                     id="inputMeasure"
                                     value={ingredientAmount}
@@ -102,7 +105,7 @@ export const WorkDialog: FC<{
                                         onChange={e => setSelectedUnit(e.value)}
                                         options={measures}
                                         optionLabel="name"
-                                        placeholder="Select a Measurement"
+                                        placeholder="Select unit"
                                         className="w-full md:w-14rem"
                                     />
                                 </div>
@@ -110,29 +113,25 @@ export const WorkDialog: FC<{
                         </div>
                         <div className="p-field p-col-12 p-md-4" style={{ marginTop: 30 }}>
                             <span className="p-float-label">
-                                <div className="card flex justify-content-center">
-                                    <Dropdown
-                                        id="inputIngredient"
-                                        value={ingredient}
-                                        onChange={e => setIngredient(e.value)}
-                                        options={ingredients}
-                                        optionLabel="name"
-                                        placeholder="Select a Measurement"
-                                        className="w-full md:w-14rem"
-                                    />
-                                    {/* <MultiSelect
-                                        value={ingredient}
-                                        options={ingredients}
-                                        onChange={(e) => setIngredient(e.value)}
-                                        optionLabel="label"
-                                        optionGroupLabel="label"
-                                        optionGroupChildren="items"
-                                        optionGroupTemplate={groupedItemTemplate}
-                                        placeholder="Select Ingredients"
-                                        display="chip"
-                                        className="w-full md:w-20rem"
-                                    /> */}
-                                    <label htmlFor="inputIngredient">Ingredient</label>
+                                <div className="card">
+                                    <DataTable
+                                        value={ingredients}
+                                        selection={selectedIngredients}
+                                         onSelectionChange={e => setSelectedIngredients(e.value)}
+                                    >
+                                        <Column
+                                            selectionMode="multiple"
+                                            headerStyle={{ width: '3rem' }}
+                                        />
+                                        <Column
+                                            field="name"
+                                            header="Ingredient name"
+                                        />
+                                        <Column
+                                            field="lot"
+                                            header="Ingredient lot"
+                                        />
+                                    </DataTable>
                                 </div>
                             </span>
                         </div>

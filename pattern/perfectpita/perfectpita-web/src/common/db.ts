@@ -5,7 +5,6 @@ export const measures = [
     { name: 'Ounce', code: 'oz' },
     { name: 'Gallon', code: 'gal' },
     { name: 'Gram', code: 'g' },
-    { name: 'Liter', code: 'l' }
+    { name: 'Liter', code: 'l' },
+    { name: 'Ton', code: 't' }
 ]
-
-export const emptyIngredient: Ingredient = {}

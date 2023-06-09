@@ -1,10 +1,12 @@
 import React, { useState, FC } from "react"
-import { Ingredient } from "../../models/types"
+import { Ingredient, Unit } from "../../models/types"
 import { Dialog } from "primereact/dialog"
 import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
 import './IngredientDialog.css'
 import { Button } from "primereact/button"
+import { Dropdown } from "primereact/dropdown"
+import { measures } from "../../common/db"
 
 export const IngredientDialog: FC<{
     dialogHeader: string,
@@ -21,6 +23,7 @@ export const IngredientDialog: FC<{
 }) => {
 
         const [ingredient, setIngredient] = useState<Ingredient>({})
+        const [selectedUnit, setSelectedUnit] = useState<Unit>()
 
         const footerContent = (
             <div>
@@ -84,13 +87,29 @@ export const IngredientDialog: FC<{
                             </span>
                         </div>
                         <div className="p-field p-col-12 p-md-4 input-element">
-                            <span className="p-float-label">
+                            <span className="p-float-label flex justify-content-center">
                                 <InputNumber
                                     id="inputAmount"
                                     value={ingredient.amount?.mass}
-                                    // onChange={e => setIngredient(ingredient => { ingredient.amount?.mass = e.value ?? 0; return ingredient })}
+                                    onChange={e => setIngredient(ingredient => {
+                                        ingredient.amount 
+                                        ? ingredient.amount.mass = e.value 
+                                        : ingredient.amount.mass = null;
+                                        ingredient.amount ? ingredient.amount.unit = selectedUnit : null;
+                                        return ingredient
+                                    })}
                                 />
                                 <label htmlFor="inputAmount">Amount</label>
+                                <div className="card flex justify-content-center">
+                                    <Dropdown
+                                        value={selectedUnit}
+                                        onChange={e => setSelectedUnit(e.value)}
+                                        options={measures}
+                                        optionLabel="name"
+                                        placeholder="Select unit"
+                                        className="w-full md:w-14rem"
+                                    />
+                                </div>
                             </span>
                         </div>
                     </div>
