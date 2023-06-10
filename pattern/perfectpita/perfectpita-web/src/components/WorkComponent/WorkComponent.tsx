@@ -1,12 +1,10 @@
 import { Button } from "primereact/button"
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { Fieldset } from 'primereact/fieldset'
 import { InputText } from "primereact/inputtext"
 import { FC, ReactElement, useRef, useState } from "react"
-import { Ingredient, Unit, Work, WorkIngredient } from "../../models/types"
+import { Ingredient, Work, WorkIngredient } from "../../models/types"
 import { WorkDialog } from "../WorkDialog/WorkDialog"
-import { Chip } from 'primereact/chip'
 
 export const WorkComponent: FC<{
     ingredients: Ingredient[],
@@ -17,9 +15,9 @@ export const WorkComponent: FC<{
     works,
     setWorks
 }) => {
-        const dt = useRef<any>(null)
+        const dt = useRef<DataTable<Ingredient[]>>(null)
         const [dialogHeader, setDialogHeader] = useState('')
-        const [globalFilter, setGlobalFilter] = useState<any>()
+        const [globalFilter, setGlobalFilter] = useState<string>()
         const [selectedWork, setSelectedWork] = useState<any>()
         const [visibleDialog, setVisibleDialog] = useState<boolean>(false)
 
@@ -70,18 +68,17 @@ export const WorkComponent: FC<{
             <DataTable value={work.workIngredients} tableStyle={{ minWidth: '50rem' }} showGridlines >
                 <Column
                     field="name"
-                    header="Ingredient name"
+                    header="Name"
                     body={workIngredient => workIngredient.ingredient.name}
                 />
                 <Column
                     field="lot"
-                    header="Ingredient lot"
+                    header="Lot"
                     body={workIngredient => workIngredient.ingredient.lot}
                 />
                 <Column
                     field="workIngredients"
-                    header="Ingredient amount"
-                    headerStyle={{ textAlign: "center" }}
+                    header="Amount"
                     body={workIngredient => workIngredient.amount + ' ' + workIngredient.measure?.unit?.code}
                 />
             </DataTable>
@@ -162,7 +159,7 @@ export const WorkComponent: FC<{
                         field="workIngredients"
                         header="Ingredients used"
                         headerTooltipOptions={{ position: "bottom" }}
-                        headerStyle={{ textAlign: "center" }}
+                        headerStyle={{}}
                         headerTooltip="Ingredients used in a given work"
                         body={workIngredientsBody}
                         style={{ padding: 0 }}
@@ -171,18 +168,10 @@ export const WorkComponent: FC<{
                         headerTooltip="Manage a work"
                         headerTooltipOptions={{ position: "bottom" }}
                         body={statusBodyTemplate}
-                        headerStyle={{ width: '148px' }}
-                        header={<Button icon="pi pi-cog" rounded text aria-label="Manage" />}
+                        headerStyle={{ width: '148px', textAlign: 'center' }}
+                        header={<Button icon="pi pi-cog" rounded text aria-label="Manage" disabled />}
                     />
                 </DataTable>
-
-                {/*
-                    <DataTable value={workIngredients} tableStyle={{ minWidth: '50rem' }}>
-                        <Column field="name" header="Ingredient name"></Column>
-                        <Column field="lot" header="Lot"></Column>
-                        <Column field="measure" header="Amount" body={ingredientAmount + ' ' + selectedUnit?.code}></Column>
-                    </DataTable>
-                */}
 
                 <WorkDialog
                     dialogHeader={dialogHeader}

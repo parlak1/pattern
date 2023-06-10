@@ -1,15 +1,14 @@
-import { FC, useState } from "react"
-import { Ingredient, Measure, Unit, Work } from "../../models/types"
+import { Button } from "primereact/button"
+import { Column } from "primereact/column"
+import { DataTable } from "primereact/datatable"
 import { Dialog } from "primereact/dialog"
 import { Dropdown } from "primereact/dropdown"
 import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
+import { FC, useState } from "react"
 import { measures } from "../../common/db"
-import { Button } from "primereact/button"
-import { MultiSelect } from 'primereact/multiselect'
-import { Column } from "primereact/column"
-import { DataTable } from "primereact/datatable"
 import { getNow } from "../../common/util"
+import { Ingredient, Measure, Unit, Work } from "../../models/types"
 
 export const WorkDialog: FC<{
     dialogHeader: string,
@@ -26,14 +25,13 @@ export const WorkDialog: FC<{
     works,
     setWorks
 }) => {
-        const [work, setWork] = useState<Work>({ workIngredients: [] })
+        const [work, setWork] = useState<Work>({})
         const [ingredient, setIngredient] = useState<Ingredient>({})
         const [ingredientAmount, setIngredientAmount] = useState<any>()
         const [selectedUnit, setSelectedUnit] = useState<Unit>()
-        const [selectedIngredients, setSelectedIngredients] = useState<any>(null)
+        const [selectedIngredients, setSelectedIngredients] = useState<any>()
 
-        const footerContent = (
-            <div>
+        const dialogFooter = <>
                 <Button
                     label="Cancel"
                     icon="pi pi-times"
@@ -46,34 +44,45 @@ export const WorkDialog: FC<{
                     onClick={() => onClickStartwork()}
                     autoFocus
                 />
-            </div>
-        )
+            </>
 
         const onClickStartwork = () => {
             setWork(work => setUpWork(work, ingredient, ingredientAmount))
             setWorks([work, ...works])
             setWork({ workIngredients: [] })
             setVisibleDialog(false)
-
         }
 
         const setUpWork = (work: Work, ingredient: Ingredient, ingredientAmount: Measure): Work => {
             work.lot = getNow().toString()
-            work.workIngredients.push({ ingredient: ingredient, amount: ingredientAmount })
+            work.workIngredients?.push({ ingredient: ingredient, amount: ingredientAmount })
             // work.workIngredients
             //     ? work.workIngredients = [...work.workIngredients, { ingredient: ingredient, amount: ingredientAmount }]
             //     : work.workIngredients = [{ ingredient: ingredient, amount: ingredientAmount }]
             return work
         }
 
-        const groupedItemTemplate = (option: any) => {
-            return 'xxx'
-            // return (
-            //     <div className="flex align-items-center">
-            //         <img alt={option.label} src="https://primefaces.org/cdn/primereact/images/flag/flag_placeholder.png" className={`mr-2 flag flag-${option.code.toLowerCase()}`} style={{ width: '18px' }} />
-            //         <div>{option.label}</div>
-            //     </div>
-            // )
+        const amountBodyTemplate = () => {
+            return <span className="p-float-label flex justify-content-center">
+            <InputNumber
+                id="inputMeasure"
+                value={ingredientAmount}
+                onChange={e => setIngredientAmount(e.value ?? 0)}
+            />
+            <label htmlFor="inputMeasure">Amount</label>
+            <div className="card flex justify-content-center">
+                <Dropdown
+                id="inputUnit"
+                    value={selectedUnit}
+                    onChange={e => setSelectedUnit(e.value)}
+                    options={measures}
+                    optionLabel="name"
+                    placeholder="Select unit"
+                    className="w-full md:w-14rem"
+                />
+            <label htmlFor="inputUnit">Unit</label>
+            </div>
+        </span>
         }
 
         return (
@@ -82,7 +91,7 @@ export const WorkDialog: FC<{
                 visible={visibleDialog}
                 style={{ width: '50vw' }}
                 onHide={() => setVisibleDialog(false)}
-                footer={footerContent}
+                footer={dialogFooter}
             >
                 <div className="card">
                     <div className="p-fluid p-grid">
@@ -92,7 +101,7 @@ export const WorkDialog: FC<{
                                 <label htmlFor="inputName">Work name</label>
                             </span>
                         </div>
-                        <div className="p-field p-col-12 p-md-4" style={{ marginTop: 30 }}>
+                        {/* <div className="p-field p-col-12 p-md-4" style={{ marginTop: 30 }}>
                             <span className="p-float-label flex justify-content-center">
                                 <InputNumber
                                     id="inputMeasure"
@@ -111,7 +120,7 @@ export const WorkDialog: FC<{
                                     />
                                 </div>
                             </span>
-                        </div>
+                        </div> */}
                         <div className="p-field p-col-12 p-md-4" style={{ marginTop: 30 }}>
                             <span className="p-float-label">
                                 <div className="card">
@@ -126,20 +135,23 @@ export const WorkDialog: FC<{
                                         />
                                         <Column
                                             field="name"
-                                            header="Ingredient name"
+                                            header="Name"
                                         />
                                         <Column
                                             field="lot"
-                                            header="Ingredient lot"
+                                            header="Lot"
+                                        />
+                                           <Column
+                                            field="lot"
+                                            header="Amount"
+                                            body={amountBodyTemplate}
                                         />
                                     </DataTable>
                                 </div>
                             </span>
                         </div>
-
                     </div>
                 </div>
             </Dialog>
         )
     }
-

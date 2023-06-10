@@ -1,5 +1,5 @@
 import React, { useState, FC } from "react"
-import { Ingredient, Unit } from "../../models/types"
+import { Ingredient, Mode, Unit } from "../../models/types"
 import { Dialog } from "primereact/dialog"
 import { InputNumber } from "primereact/inputnumber"
 import { InputText } from "primereact/inputtext"
@@ -11,21 +11,23 @@ import { getNow } from "../../common/util"
 
 export const IngredientDialog: FC<{
     dialogHeader: string,
-    visibleDialog: boolean
+    dialogVisibility: boolean
     setVisibleDialog(setter: boolean): void,
     ingredients: Ingredient[],
-    setIngredients(ingredient: Ingredient[]): void
+    setIngredients(ingredient: Ingredient[]): void,
+    mode: string
 }> = ({
     dialogHeader,
-    visibleDialog,
+    dialogVisibility: dialogVisibility,
     setVisibleDialog,
     ingredients,
-    setIngredients
+    setIngredients,
+    mode
 }) => {
 
         const [ingredient, setIngredient] = useState<Ingredient>({})
 
-        const footerContent = (
+        const dialogFooter = (
             <div>
                 <Button
                     label="Cancel"
@@ -57,10 +59,10 @@ export const IngredientDialog: FC<{
         return (
             <Dialog
                 header={dialogHeader}
-                visible={visibleDialog}
+                visible={dialogVisibility}
                 style={{ width: '50vw' }}
                 onHide={() => setVisibleDialog(false)}
-                footer={footerContent}
+                footer={dialogFooter}
             >
                 <div className="card">
                     <div className="p-fluid p-grid">
@@ -73,6 +75,7 @@ export const IngredientDialog: FC<{
                                         old.name = e.target.value
                                         return old
                                     })}
+                                    disabled={mode === Mode.read}
                                 />
                                 <label htmlFor="inputName">Name</label>
                             </span>
@@ -86,6 +89,7 @@ export const IngredientDialog: FC<{
                                         old.lot = e.target.value
                                         return old
                                     })}
+                                    disabled={mode === Mode.read}
                                 />
                                 <label htmlFor="inputLot">Lot</label>
                             </span>
@@ -95,14 +99,14 @@ export const IngredientDialog: FC<{
                                 <InputNumber
                                     id="inputAmount"
                                     value={ingredient.amount?.mass}
-                                    onChange={e => {setIngredient((old: Ingredient) => {
+                                    onChange={e => {
+                                        setIngredient((old: Ingredient) => {
                                             let amount = old.amount ?? {}
-                                            amount = {mass: e.value ?? undefined}
+                                            amount = { mass: e.value ?? undefined }
                                             old.amount = amount
                                             return old
-                                        })
-                                    }
-                                    }
+                                        })}}
+                                    disabled={mode === Mode.read}
                                 />
                                 <label htmlFor="inputAmount">Amount</label>
                                 <div className="card flex justify-content-center">
@@ -118,6 +122,7 @@ export const IngredientDialog: FC<{
                                         optionLabel="name"
                                         placeholder="Select unit"
                                         className="w-full md:w-14rem"
+                                        disabled={mode === Mode.read}
                                     />
                                 </div>
                             </span>

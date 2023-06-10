@@ -5,6 +5,7 @@ import { Column } from "primereact/column"
 import { DataTable } from "primereact/datatable"
 import { InputText } from "primereact/inputtext"
 import { Ingredient } from '../../models/types'
+import { Mode } from '../../models/types'
 import { IngredientDialog } from "../IngredientDialog/IngredientDialog"
 
 export const IngredientComponent: FC<{
@@ -14,15 +15,35 @@ export const IngredientComponent: FC<{
     ingredients,
     setIngredients
 }) => {
-        const dt = useRef<any>(null)
-        const [selectedIngredient, setSelectedIngredient] = useState<any>()
-        const [globalFilter, setGlobalFilter] = useState<any>()
-        const [dialogHeader, setDialogHeader] = useState('')
-        const [visibleDialog, setVisibleDialog] = useState<boolean>(false)
+        const dt = useRef<DataTable<Ingredient[]>>(null)
+        const [selectedIngredient, setSelectedIngredient] = useState<any>({})
+        const [globalFilter, setGlobalFilter] = useState<string>()
+        const [dialogHeader, setDialogHeader] = useState<string>('')
+        const [dialogVisibility, setVisibleDialog] = useState<boolean>(false)
+        const [mode, setMode] = useState<string>(Mode.create)
 
-        const openNew = () => {
-            setVisibleDialog(true)
+        const onClickCreate = (e: any): void => {
             setDialogHeader('New Ingredient')
+            setVisibleDialog(true)
+            setMode(Mode.create)
+        }
+
+        const onClickUsage = (e: any): void => {
+            setDialogHeader(() => `Details for "${selectedIngredient.name}"`)
+            setVisibleDialog(true)
+            setMode(Mode.read)
+        }
+
+        const onClickUpdate = (e: any): void => {
+            setDialogHeader(() => `Update "${selectedIngredient.name}"`)
+            setVisibleDialog(true)
+            setMode(Mode.update)
+        }
+
+        const onClickDelete = (e: any): void => {
+            setDialogHeader(() => `Delete "${selectedIngredient.name}"`)
+            setVisibleDialog(true)
+            setMode(Mode.delete)
         }
 
         const exportCSV = () => {
@@ -35,7 +56,7 @@ export const IngredientComponent: FC<{
                     label="New Ingredient"
                     icon="pi pi-plus"
                     severity="success"
-                    onClick={openNew}
+                    onClick={onClickCreate}
                 />
                 <h2 className="m-0">Ingredients</h2>
                 <span className="p-input-icon-left">
@@ -55,25 +76,6 @@ export const IngredientComponent: FC<{
                 </span>
             </div>
         )
-
-
-        const onClickUsage = (e: any): void => {
-            setDialogHeader(() => `Details for ${e.target.value}`)
-            setVisibleDialog(true)
-        }
-
-        const onClickUpdate = (e: any): void => {
-            setDialogHeader(() => `Update ${e.target.value}`)
-            setVisibleDialog(true)
-        }
-
-        const onClickDelete = (e: any): void => {
-            setDialogHeader(() => `Delete ${e.target.value}`)
-            setVisibleDialog(true)
-        }
-
-        const amountBodyTemplate = (ingredinet: Ingredient): ReactElement =>
-            <>{ingredinet.amount?.mass + ' ' + ingredinet.amount?.unit?.code}</>
 
         const statusBodyTemplate = (ingredinet: Ingredient): ReactElement => {
             return <>
@@ -123,29 +125,37 @@ export const IngredientComponent: FC<{
                     globalFilter={globalFilter}
                     header={header}
                     sortMode="multiple"
+                    selectionMode="single"
                 >
-                    <Column field="name" header="Name" sortable></Column>
-                    <Column field="lot" header="Lot" sortable></Column>
-                    <Column field="amount" header="Amount" body={amountBodyTemplate} sortable></Column>
-                    <Column field="createdBy" header="Created By" sortable></Column>
-                    <Column field="dateCreated" header="Date Created" body={dateBodyTemplate} sortable></Column>
-                    <Column body={statusBodyTemplate} headerStyle={{ width: '148px' }}></Column>
+                    <Column
+                        field="name"
+                        header="Name"
+                    />
+                    <Column
+                        field="lot"
+                        header="Lot"
+                    />
+                    <Column
+                        field="amount"
+                        header="Amount"
+                        body={(ingredient) => <>{ingredient.amount?.mass + ' ' + ingredient.amount?.unit?.code}</>}
+                    />
+                    <Column
+                        header={<Button icon="pi pi-cog" rounded text aria-label="Manage" disabled />}
+                        body={statusBodyTemplate}
+                        headerStyle={{ width: '148px' }}
+                    />
                 </DataTable>
 
                 <IngredientDialog
                     dialogHeader={dialogHeader}
-                    visibleDialog={visibleDialog}
+                    dialogVisibility={dialogVisibility}
                     setVisibleDialog={setVisibleDialog}
                     ingredients={ingredients}
                     setIngredients={setIngredients}
+                    mode={mode}
                 />
+
             </div>
         )
     }
-
-            // return <Tag value={ingredinet.status} severity={ingredinet.severity}></Tag>
-
-    // const onClickUsage = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>): void => {
-    //     setDialogHeader(() => `Update ${e.target}`)
-    //     setVisibleDialog(true)
-    // }

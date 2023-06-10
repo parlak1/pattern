@@ -55,4 +55,7 @@ https://primereact.org/datatable/
 
 
 Object.keys(obj).forEach((prop)=> console.log(prop))
+
+return <Tag value={ingredinet.status} severity={ingredinet.severity}></Tag>
+
 */

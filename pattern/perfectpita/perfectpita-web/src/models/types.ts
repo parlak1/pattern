@@ -26,6 +26,8 @@ export type Ingredient = {
     createdBy?:string
     dateUpdated?: number
     updatedBy?: string
+    dateDeleted?: number
+    deletedBy?: string
     expirationDate?: number
 }
 
@@ -33,7 +35,7 @@ export type Ingredient = {
 export type Work = {
     name?: string
     lot?: string
-    workIngredients: WorkIngredient[]
+    workIngredients?: WorkIngredient[]
     dateCreated?: number
     createdBy?:string
     dateUpdated?: number
@@ -55,4 +57,9 @@ export const Severity = {
     recall: 'danger'
 }
 
-
+export const Mode = {
+    create: 'c',
+    read: 'r',
+    update: 'u',
+    delete: 'd'
+}
